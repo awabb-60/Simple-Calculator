@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".view.MainActivity">
+
+    <LinearLayout
+        android:id="@+id/type_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/keyPad_layout"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="start"
+            android:padding="8dp"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:textSize="35sp"
+            tools:hint="Type" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvHistory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="@string/history"
+                android:textColor="@color/light_blue"
+                android:textSize="25sp" />
+
+            <TextView
+                android:id="@+id/tvAnswer"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:layout_weight="1"
+                android:background="@color/op"
+                android:maxLines="1"
+                android:textAlignment="textEnd"
+                android:textSize="20sp"
+                tools:hint="Answer" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/keyPad_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/historyFragment"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <TableLayout
+            android:id="@+id/tlKeyPad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <TableRow android:background="@color/darker_light_blue">
+
+                <TextView
+                    android:id="@+id/clearAll"
+                    style="@style/ButtonText"
+                    android:text="@string/clearAll" />
+
+                <TextView
+                    android:id="@+id/lParenthesis"
+                    style="@style/ButtonText"
+                    android:text="@string/leftParenthesis" />
+
+                <TextView
+                    android:id="@+id/rParenthesis"
+                    style="@style/ButtonText"
+                    android:text="@string/rightParenthesis" />
+
+                <ImageView
+                    android:id="@+id/backSpace"
+                    style="@style/ButtonText"
+                    android:layout_height="match_parent"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_backspace" />
+            </TableRow>
+
+            <TableRow
+                android:background="@color/darker_light_blue"
+                tools:ignore="UselessParent">
+
+                <TextView
+                    android:id="@+id/number_1"
+                    style="@style/ButtonText"
+                    android:text="@string/number1" />
+
+                <TextView
+                    android:id="@+id/number_2"
+                    style="@style/ButtonText"
+                    android:text="@string/number2" />
+
+                <TextView
+                    android:id="@+id/number_3"
+                    style="@style/ButtonText"
+                    android:text="@string/number3" />
+
+                <TextView
+                    android:id="@+id/division"
+                    style="@style/ButtonText"
+                    android:text="@string/division" />
+            </TableRow>
+
+            <TableRow
+                android:background="@color/darker_light_blue"
+                tools:ignore="UselessParent">
+
+                <TextView
+                    android:id="@+id/number_4"
+                    style="@style/ButtonText"
+                    android:text="@string/number4" />
+
+                <TextView
+                    android:id="@+id/number_5"
+                    style="@style/ButtonText"
+                    android:text="@string/number5" />
+
+                <TextView
+                    android:id="@+id/number_6"
+                    style="@style/ButtonText"
+                    android:text="@string/number6" />
+
+                <TextView
+                    android:id="@+id/multiply"
+                    style="@style/ButtonText"
+                    android:text="@string/multiplication" />
+            </TableRow>
+
+            <TableRow
+                android:background="@color/darker_light_blue"
+                tools:ignore="UselessParent">
+
+                <TextView
+                    android:id="@+id/number_7"
+                    style="@style/ButtonText"
+                    android:text="@string/number7" />
+
+                <TextView
+                    android:id="@+id/number_8"
+                    style="@style/ButtonText"
+                    android:text="@string/number8" />
+
+                <TextView
+                    android:id="@+id/number_9"
+                    style="@style/ButtonText"
+                    android:text="@string/number9" />
+
+                <TextView
+                    android:id="@+id/addition"
+                    style="@style/ButtonText"
+                    android:text="@string/addition" />
+            </TableRow>
+
+            <TableRow
+                android:background="@color/darker_light_blue"
+                tools:ignore="UselessParent">
+
+                <TextView
+                    android:id="@+id/negativeP"
+                    style="@style/ButtonText"
+                    android:text="@string/negativeLeftParenthesis" />
+
+                <TextView
+                    android:id="@+id/number_0"
+                    style="@style/ButtonText"
+                    android:text="@string/number0" />
+
+                <TextView
+                    android:id="@+id/decimalPoint"
+                    style="@style/ButtonText"
+                    android:text="@string/decimalPoint" />
+
+                <TextView
+                    android:id="@+id/subtraction"
+                    style="@style/ButtonText"
+                    android:text="@string/subtraction" />
+            </TableRow>
+
+
+        </TableLayout>
+
+        <Button
+            android:id="@+id/equals"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="buttonClicked"
+            android:text="@string/equals"
+            android:textColor="@color/black"
+            android:textSize="30sp" />
+    </LinearLayout>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/historyFragment"
+        android:name="com.awab.calculator.view.HistoryFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignTop="@id/keyPad_layout"
+        android:layout_alignBottom="@id/keyPad_layout"
+        android:layout_alignParentStart="true" />
+
+</RelativeLayout>
