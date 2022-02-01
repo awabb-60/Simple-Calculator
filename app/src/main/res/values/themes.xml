@@ -32,7 +32,7 @@
         <item name="android:onClick">buttonClicked</item>
         <item name="android:clickable">true</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:background">@color/white_gray</item>
+        <item name="android:background">@color/gray</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_margin">0.5dp</item>
         <item name="android:padding">10dp</item>
@@ -43,7 +43,7 @@
         <item name="android:onClick">buttonClicked</item>
         <item name="android:clickable">true</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:background">@color/white_gray</item>
+        <item name="android:background">@color/gray</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_margin">0.5dp</item>
         <item name="android:padding">3dp</item>

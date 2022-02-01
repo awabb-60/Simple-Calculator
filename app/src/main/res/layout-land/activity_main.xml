@@ -12,8 +12,10 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/keyPad_layout"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:orientation="vertical">
 
         <TextView
@@ -37,6 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
                 android:text="@string/history"
                 android:textColor="@color/light_blue"
                 android:textSize="25sp" />
@@ -61,7 +64,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_alignStart="@id/historyFragment"
+        android:layout_alignLeft="@id/historyFragment"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:orientation="vertical">
 
@@ -72,6 +77,16 @@
             android:layout_gravity="center">
 
             <TableRow android:background="@color/darker_light_blue">
+
+                <TextView
+                    android:id="@+id/sin"
+                    style="@style/landScapeButtonText"
+                    android:text="@string/sin" />
+
+                <TextView
+                    android:id="@+id/exponent"
+                    style="@style/landScapeButtonText"
+                    android:text="@string/exponent" />
 
                 <TextView
                     android:id="@+id/clearAll"
@@ -92,13 +107,22 @@
                     android:id="@+id/backSpace"
                     style="@style/landScapeButtonText"
                     android:layout_height="match_parent"
+                    android:contentDescription="@string/backspace"
                     android:scaleType="center"
                     android:src="@drawable/ic_backspace" />
             </TableRow>
 
-            <TableRow
-                android:background="@color/darker_light_blue"
-                tools:ignore="UselessParent">
+            <TableRow android:background="@color/darker_light_blue">
+
+                <TextView
+                    android:id="@+id/cos"
+                    style="@style/landScapeButtonText"
+                    android:text="@string/cos" />
+
+                <TextView
+                    android:id="@+id/squareRoot"
+                    style="@style/landScapeButtonText"
+                    android:text="@string/squareRoot" />
 
                 <TextView
                     android:id="@+id/number_1"
@@ -126,6 +150,16 @@
                 tools:ignore="UselessParent">
 
                 <TextView
+                    android:id="@+id/tan"
+                    style="@style/landScapeButtonText"
+                    android:text="@string/tan" />
+
+                <TextView
+                    android:id="@+id/t1"
+                    style="@style/landScapeButtonText"
+                    android:text="@string/template10Power" />
+
+                <TextView
                     android:id="@+id/number_4"
                     style="@style/landScapeButtonText"
                     android:text="@string/number4" />
@@ -151,6 +185,16 @@
                 tools:ignore="UselessParent">
 
                 <TextView
+                    android:id="@+id/ln"
+                    style="@style/landScapeButtonText"
+                    android:text="@string/ln" />
+
+                <TextView
+                    android:id="@+id/t2"
+                    style="@style/landScapeButtonText"
+                    android:text="@string/templatePower2" />
+
+                <TextView
                     android:id="@+id/number_7"
                     style="@style/landScapeButtonText"
                     android:text="@string/number7" />
@@ -174,6 +218,16 @@
             <TableRow
                 android:background="@color/darker_light_blue"
                 tools:ignore="UselessParent">
+
+                <TextView
+                    android:id="@+id/e"
+                    style="@style/landScapeButtonText"
+                    android:text="@string/e" />
+
+                <TextView
+                    android:id="@+id/pi"
+                    style="@style/landScapeButtonText"
+                    android:text="@string/pi" />
 
                 <TextView
                     android:id="@+id/negativeP"
@@ -203,7 +257,6 @@
             android:id="@+id/equals"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="buttonClicked"
             android:text="@string/equals"
             android:textColor="@color/black"
             android:textSize="17sp" />
@@ -216,6 +269,7 @@
         android:layout_height="0dp"
         android:layout_alignTop="@id/keyPad_layout"
         android:layout_alignBottom="@id/keyPad_layout"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true" />
 
 </RelativeLayout>

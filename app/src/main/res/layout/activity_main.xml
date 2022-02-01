@@ -12,14 +12,16 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/keyPad_layout"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/tvType"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="1"
             android:ellipsize="start"
             android:padding="8dp"
@@ -37,6 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
+                android:layout_marginLeft="5dp"
                 android:text="@string/history"
                 android:textColor="@color/light_blue"
                 android:textSize="25sp" />
@@ -47,7 +50,6 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="end"
                 android:layout_weight="1"
-                android:background="@color/op"
                 android:maxLines="1"
                 android:textAlignment="textEnd"
                 android:textSize="20sp"
@@ -61,7 +63,9 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_alignStart="@id/historyFragment"
+        android:layout_alignLeft="@id/historyFragment"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:orientation="vertical">
 
@@ -92,6 +96,7 @@
                     android:id="@+id/backSpace"
                     style="@style/ButtonText"
                     android:layout_height="match_parent"
+                    android:contentDescription="@string/backspace"
                     android:scaleType="center"
                     android:src="@drawable/ic_backspace" />
             </TableRow>
@@ -203,10 +208,9 @@
             android:id="@+id/equals"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="buttonClicked"
             android:text="@string/equals"
             android:textColor="@color/black"
-            android:textSize="30sp" />
+            android:textSize="25sp" />
     </LinearLayout>
 
     <androidx.fragment.app.FragmentContainerView
@@ -216,6 +220,7 @@
         android:layout_height="0dp"
         android:layout_alignTop="@id/keyPad_layout"
         android:layout_alignBottom="@id/keyPad_layout"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true" />
 
 </RelativeLayout>

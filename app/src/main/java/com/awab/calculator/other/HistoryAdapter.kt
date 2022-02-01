@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.awab.calculator.R
-import com.awab.calculator.models.HistoryItem
+import com.awab.calculator.data.HistoryItem
 
 class HistoryAdapter: ListAdapter<HistoryItem, HistoryAdapter.ViewHolder>(DiffCallBack()) {
     private lateinit var listener: HistoryClickListener
@@ -25,10 +25,12 @@ class HistoryAdapter: ListAdapter<HistoryItem, HistoryAdapter.ViewHolder>(DiffCa
         holder.answer.text = item.answer
     }
 
-
-
-    fun setClickListener(li: HistoryClickListener){
-        this.listener = li
+    /**
+     * set the click listener the will get used when interacting with items
+     * @param listener of type HistoryClickListener
+     * */
+    fun setClickListener(listener: HistoryClickListener){
+        this.listener = listener
     }
 
     inner class ViewHolder(view: View):RecyclerView.ViewHolder(view){
@@ -40,7 +42,6 @@ class HistoryAdapter: ListAdapter<HistoryItem, HistoryAdapter.ViewHolder>(DiffCa
                 listener.onItemClicked(item.equation, item.answer)
             }
         }
-
     }
 
 

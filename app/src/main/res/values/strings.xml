@@ -13,18 +13,29 @@
     <string name="number7">7</string>
     <string name="number8">8</string>
     <string name="number9">9</string>
+    <string name="pi">π</string>
+    <string name="e">℮</string>
     <string name="addition">+</string>
     <string name="subtraction">-</string>
+    <string name="exponent">^</string>
     <string name="multiplication">×</string>
     <string name="division">÷</string>
+    <string name="squareRoot">|</string>
+    <string name="sin">sin</string>
+    <string name="cos">cos</string>
+    <string name="tan">tan</string>
+    <string name="ln">ln</string>
     <string name="leftParenthesis">(</string>
     <string name="rightParenthesis">)</string>
+    <string name="template10Power">10 ͯ</string>
+    <string name="templatePower2">x2</string>
     <string name="negativeLeftParenthesis">(-</string>
 
     <string name="clearAll">C</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <string name="history">History</string>
     <string name="keyPad">KeyPad</string>
+    <string name="backspace">backspace</string>
+    <string name="clear">clear</string>
+    <string name="no_items">no items</string>
 </resources>
