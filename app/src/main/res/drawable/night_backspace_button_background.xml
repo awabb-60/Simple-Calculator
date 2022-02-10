@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:dither="true">
+
+    <item android:drawable="@color/back_space_clicked_color"
+        android:state_pressed="true"/>
+
+    <item android:drawable="@color/dark_fad_gray"
+        android:state_pressed="false"/>
+
+    <item android:drawable="@color/dark_fad_gray"/>
+
+</selector>

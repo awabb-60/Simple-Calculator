@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomSelectableTextView">
+        <attr name="button_text" format="string"/>
+        <attr name="button_text_size" format="dimension"/>
+        <attr name="button_text_padding" format="dimension"/>
+        <attr name="button_background" format="reference"/>
+    </declare-styleable>
+</resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="ButtonTextSize">25dp</dimen>
+    <dimen name="ButtonTextPadding">5dp</dimen>
+
+    <dimen name="landScapeButtonTextSize">13dp</dimen>
+    <dimen name="landScapeButtonTextPadding">1dp</dimen>
+</resources>

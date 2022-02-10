@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-        android:text="@string/no_items"
+        android:text="@string/no_history"
         android:textSize="20sp" />
 
     <androidx.recyclerview.widget.RecyclerView

@@ -4,11 +4,16 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/HP/AndroidStudioProjects/Calculator/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.11614583333333334" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/Calculator/app/src/main/res/drawable/backspace_button_background.xml" value="0.1424342105263158" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/Calculator/app/src/main/res/drawable/ic_empty.xml" value="0.19722222222222222" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/Calculator/app/src/main/res/drawable/ic_launcher_background.xml" value="0.21203703703703702" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/Calculator/app/src/main/res/drawable/keyboard_button_background.xml" value="0.22552083333333334" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/Calculator/app/src/main/res/drawable/keypord_button_background.xml" value="0.22552083333333334" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/Calculator/app/src/main/res/drawable/night_backspace_button_background.xml" value="0.14104234527687295" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/Calculator/app/src/main/res/layout-land/activity_main.xml" value="0.1" />
-        <entry key="..\:/Users/HP/AndroidStudioProjects/Calculator/app/src/main/res/layout/activity_main.xml" value="0.1953125" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/Calculator/app/src/main/res/layout/activity_main.xml" value="0.16" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/Calculator/app/src/main/res/layout/cb.xml" value="0.209375" />
+        <entry key="..\:/Users/HP/AndroidStudioProjects/Calculator/app/src/main/res/layout/ct.xml" value="0.209375" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/Calculator/app/src/main/res/layout/fragment_history.xml" value="0.209375" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/Calculator/app/src/main/res/layout/history_item.xml" value="0.209375" />
         <entry key="..\:/Users/HP/AndroidStudioProjects/Calculator/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1" />

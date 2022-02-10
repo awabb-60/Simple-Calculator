@@ -2,15 +2,48 @@
     <!-- Base application theme. -->
     <style name="Theme.Calculator" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/teal_200</item>
-        <item name="colorPrimaryVariant">@color/teal_200</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorPrimary">@color/light_blue</item>
+        <item name="colorPrimaryVariant">@color/darker_light_blue</item>
+        <item name="colorOnPrimary">@color/gray_blue</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
+        <item name="colorSecondary">@color/white</item>
+        <item name="colorSecondaryVariant">@color/white</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+    </style>
+
+
+    <!--    all the key will share these attributes-->
+    <style name="KeyPadButton">
+        <item name="android:onClick">buttonClicked</item>
+        <item name="button_background">@color/dark_fad_gray</item>
+        <item name="android:layout_margin">0.5dp</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
+    <!--    the button for the portrait view-->
+    <style name="CustomButtonStyle" parent="KeyPadButton">
+        <item name="button_text_size">@dimen/ButtonTextSize</item>
+        <item name="button_text_padding">@dimen/ButtonTextPadding</item>
+    </style>
+
+    <!--    the button for the landscape view-->
+    <style name="LandScapeCustomButtonStyle" parent="KeyPadButton">
+        <item name="button_text_size">@dimen/landScapeButtonTextSize</item>
+        <item name="button_text_padding">@dimen/landScapeButtonTextPadding</item>
+    </style>
+
+    <!--    the backspace button-->
+    <style name="BackSpaceButton" parent="KeyPadButton">
+        <item name="android:src">@drawable/ic_backspace</item>
+        <item name="android:background">@drawable/night_backspace_button_background</item>
+        <item name="contentDescription">@string/backspace</item>
+        <item name="android:scaleType">center</item>
+    </style>
+
+    <style name="ButtonsTableRow">
+        <item name="android:color">@color/darker_light_blue</item>
     </style>
 </resources>
