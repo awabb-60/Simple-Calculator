@@ -34,10 +34,10 @@ const val MATH_ERROR = "Math error!"
  * the order of the math operations
  */
 val ORDER_OF_OPERATIONS = arrayOf(
-    arrayOf(TokenType.SQUARE_ROOT, TokenType.SIN, TokenType.COS, TokenType.TAN,TokenType.LN),
+    arrayOf(TokenType.SQUARE_ROOT, TokenType.SIN, TokenType.COS, TokenType.TAN, TokenType.LN),
     arrayOf(TokenType.EXPONENT),
-    arrayOf(TokenType.MULTIPLICATION,TokenType.DIVISION),
-    arrayOf(TokenType.ADDITION,TokenType.SUBTRACT),
+    arrayOf(TokenType.MULTIPLICATION, TokenType.DIVISION),
+    arrayOf(TokenType.ADDITION, TokenType.SUBTRACT),
 )
 
 
@@ -51,23 +51,24 @@ val SINGS = listOf(TokenType.SUBTRACT, TokenType.ADDITION)
  * on symbol came after these tokes, it will be treated as a sign - +
  * example: 1×-2 , 1÷- 1
  */
-val TOKEN_TYPES_BEFORE_SIGNS = listOf(TokenType.L_PARENTHESIS,TokenType.EXPONENT, TokenType.MULTIPLICATION, TokenType.DIVISION)
+val TOKEN_TYPES_BEFORE_SIGNS =
+    listOf(TokenType.L_PARENTHESIS, TokenType.EXPONENT, TokenType.MULTIPLICATION, TokenType.DIVISION)
 
 /**
  * the token types that creates Nodes the work with signs
  */
-val TOKENS_WITH_SIGNS = listOf(TokenType.NUMBER, TokenType.L_PARENTHESIS, TokenType.SQUARE_ROOT, TokenType.SIN,TokenType.COS,
-    TokenType.TAN,TokenType.LN)
+val TOKENS_WITH_SIGNS = listOf(
+    TokenType.NUMBER, TokenType.L_PARENTHESIS, TokenType.SQUARE_ROOT, TokenType.SIN, TokenType.COS,
+    TokenType.TAN, TokenType.LN
+)
 
 /**
  * all the None words symbols
  */
-val SYMBOLS = arrayOf(EXPONENT_SYMBOL, MULTIPLICATION_SYMBOL, DIVISION_SYMBOL, SUBTRACTION_SYMBOL, ADDITION_SYMBOL)
-
-/**
- * this has the endings of the word symbols
- */
-const val WORDS_SIGNS_END = "ns"
+val SYMBOLS = arrayOf(
+    EXPONENT_SYMBOL, MULTIPLICATION_SYMBOL, DIVISION_SYMBOL,
+    SUBTRACTION_SYMBOL, ADDITION_SYMBOL
+)
 
 /**
  * this has all the symbols that must chang any symbol before it when it get placed
@@ -77,4 +78,14 @@ val symbolsWillChangeAnyBeforeIt = arrayOf(EXPONENT_SYMBOL, MULTIPLICATION_SYMBO
 /**
  * this has the symbols that must have a multiplication symbol before it in some cases when get placed
  */
-val autoPlaceMultiplicationBefore = arrayOf(LEFT_PARENTHESIS,SQUARE_ROOT_SYMBOL,SIN_SYMBOL,COS_SYMBOL,TAN_SYMBOL,LN_SYMBOL)
+val autoPlaceMultiplicationBefore =
+    arrayOf(LEFT_PARENTHESIS, SQUARE_ROOT_SYMBOL, SIN_SYMBOL, COS_SYMBOL, TAN_SYMBOL, LN_SYMBOL)
+
+/**
+ * the cursor must always be after one of these
+ */
+val cursorAfter = arrayOf(
+    TokenType.SUBTRACT, TokenType.ADDITION, TokenType.NUMBER,
+    TokenType.MULTIPLICATION, TokenType.DIVISION, TokenType.EXPONENT,
+
+).map { it.toString() }

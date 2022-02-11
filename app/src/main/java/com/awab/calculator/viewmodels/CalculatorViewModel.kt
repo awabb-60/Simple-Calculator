@@ -2,6 +2,7 @@ package com.awab.calculator.viewmodels
 
 import android.app.Application
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -16,6 +17,7 @@ import kotlinx.coroutines.launch
 import java.math.BigDecimal
 
 // TODO: 1/1/2022 order of operations
+// TODO: 2/11/2022 3*(3)3
 // templates text
 
 class CalculatorViewModel(application: Application) : AndroidViewModel(application) {
@@ -25,12 +27,20 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
     //  the mutable values for the livedata... any edit must happen on this variables
     private val _equationText: MutableLiveData<String> = MutableLiveData<String>("")
     private val _answerText: MutableLiveData<String> = MutableLiveData<String>("")
+    val c: MutableLiveData<Int> = MutableLiveData<Int>(0)
 
     val equationText: LiveData<String>
-    get() = _equationText
+        get() = _equationText
 
     val answerText: LiveData<String>
-    get() = _answerText
+        get() = _answerText
+
+    /**
+     * the cursor positions when the user has clicked a button
+     * -> it only used in the type function
+     * ->I make globule so i don't have to pass it to every type() call.
+     */
+    private var currentCursorPos = 0
 
     var historyFragmentActive = false
 
@@ -39,8 +49,16 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
     /**
      * this function will change the value of the equation text
      */
-    fun updateEquation(text: String) {
-        _equationText.value = text
+    fun updateEquation(beforeText: String, afterText: String = "") {
+        // the cursor will be after the new text always
+        // if any change happened to the before text the cursor will after that change
+        val newCursorPos = beforeText.length
+        _equationText.value = beforeText + afterText
+        c.value = newCursorPos
+
+        // updating the current pos
+        // this is for the templates that call type() multiple times the current pos has to be updated
+        currentCursorPos = newCursorPos
     }
 
     /**
@@ -66,6 +84,7 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
 
         return try {
             var newAnswer = BigDecimal.valueOf(answer.toDouble()).toString()
+
             //  formatting some kotlin math stuff
             if (newAnswer == "-0")
                 newAnswer = "0"
@@ -90,11 +109,11 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
      * @param text the initial equation text
      * @return the equationText with all the open parenthesis closed.
      */
-    private fun closeParenthesis(text:String):String {
+    private fun closeParenthesis(text: String): String {
         var oldValue = text
-        while(filterInput(oldValue, RIGHT_PARENTHESIS) != oldValue){
+        while (filterInput(oldValue, RIGHT_PARENTHESIS) != oldValue) {
             oldValue = filterInput(oldValue, RIGHT_PARENTHESIS)
-            }
+        }
         return oldValue
     }
 
@@ -110,19 +129,23 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
      * do delete something from the the equation
      */
     private fun backSpace() {
-        if (_equationText.value.isNullOrEmpty())
+        // applying the backspace to the text before the cursor
+        var textBeforeCursor = _equationText.value?.removeRange(currentCursorPos, _equationText.value?.length!!)
+        val textAfterCursor = _equationText.value?.removeRange(0, currentCursorPos)
+
+        if (textBeforeCursor.isNullOrEmpty() || textAfterCursor == null)
             return
+
         //  deleting the word symbols like sin( cos(  and |(
-        if (_equationText.value?.last() == LEFT_PARENTHESIS){
+        textBeforeCursor = if (textBeforeCursor.last() == LEFT_PARENTHESIS) {
             //  dropping the left parenthesis and the word symbols if any
-            _equationText.value = _equationText.value?.dropLast(1)?.dropLastWhile {
+            textBeforeCursor.dropLast(1).dropLastWhile {
                 it !in "$ADDITION_SYMBOL$SUBTRACTION_SYMBOL$EXPONENT_SYMBOL$MULTIPLICATION_SYMBOL$DIVISION_SYMBOL$LEFT_PARENTHESIS"
             }
-            return
-        }
+        } else //  normal backspace
+            textBeforeCursor.dropLast(1)
 
-        //  normal backspace
-        _equationText.value = _equationText.value?.dropLast(1)
+        updateEquation(textBeforeCursor, textAfterCursor)
     }
 
     /**
@@ -148,7 +171,9 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
      * all the keyPad buttons will trigger this function
      * @param id the id of the button
      */
-    fun buttonClicked(id:Int){
+    fun buttonClicked(id: Int, cursorPos: Int) {
+        // so all the type functions calls us it
+        currentCursorPos = cursorPos
         when (id) {
             R.id.decimalPoint -> {
                 type('.')
@@ -240,12 +265,26 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
         }
     }
 
+    fun updateCursorPos(newCursorPos: Int) {
+        if (_equationText.value.toString()[newCursorPos].toString() in cursorAfter) {
+            Log.d(TAG, "updateCursorPos: noop")
+        }
+    }
+
     /**
      * this will try to add the char to the equation text
      * @param char the char tha will get added
      */
     fun type(char: Char) {
-        updateEquation(filterInput(_equationText.value.toString(), char))
+        val textBeforeCursor = _equationText.value?.removeRange(currentCursorPos, _equationText.value?.length!!)
+        val textAfterCursor = _equationText.value?.removeRange(0, currentCursorPos)
+
+        // only applying the text filter to the text before the cursor
+        val newText = textBeforeCursor?.let { filterInput(it, char) }
+
+        if (newText != null && textAfterCursor != null) {
+            updateEquation(newText, textAfterCursor)
+        }
     }
 
     /**
@@ -272,7 +311,8 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
     private fun typePower2() {
         //  the power 2 template only after a number or right parenthesis
         if (_equationText.value == null || _equationText.value!!.isEmpty() ||
-            _equationText.value!!.last() !in "$DIGITS$RIGHT_PARENTHESIS")
+            _equationText.value!!.last() !in "$DIGITS$RIGHT_PARENTHESIS"
+        )
             return
 
         //  the template...

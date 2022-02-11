@@ -17,7 +17,8 @@ enum class TokenType(private val typeString: String) {
     SIN(SIN_SYMBOL+"in"),
     COS(COS_SYMBOL+"os"),
     TAN(TAN_SYMBOL+"an"),
-    LN(" ");
+
+    LN(LN_SYMBOL+"n");
 
     override fun toString(): String {
         return typeString

@@ -1,11 +1,14 @@
 package com.awab.calculator.view
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.awab.calculator.R
 import com.awab.calculator.utils.EXPONENT_SYMBOL
@@ -19,7 +22,7 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
     /**
      * this will contain the equation text
      */
-    private lateinit var tvType: TextView
+    private lateinit var etType: EditText
 
     /**
      * this will contain the answer text
@@ -37,9 +40,10 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        tvType = findViewById(R.id.tvType)
+        etType = findViewById(R.id.tvType)
         tvAnswer = findViewById(R.id.tvAnswer)
 
+        disableTheInputMethod()
         fragmentContainer = findViewById(R.id.historyFragment)
 
         //  translation the fragment off the screen at the start
@@ -57,27 +61,38 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
         btnEquals.setOnClickListener { equals() }
 
         viewModel = ViewModelProvider(this)[CalculatorViewModel::class.java]
-        tvType.text = viewModel.equationText.value
+        etType.setText(viewModel.equationText.value)
         tvAnswer.text = viewModel.answerText.value
 
         // to put the answer text in the equation text
         tvAnswer.setOnClickListener {
-            if (tvType.text.isEmpty())
+            if (etType.text.isEmpty())
                 typeAnswer()
         }
 
         //  putting the observers to update the views
-        viewModel.equationText.observe(this, object : Observer<String> {
-            override fun onChanged(t: String?) {
-                tvType.text = t
-            }
+        viewModel.equationText.observe(this, { t ->
+            etType.editableText.clear()
+            etType.editableText.append(t)
+        })
+        viewModel.c.observe(this, { pos ->
+            etType.setSelection(pos)
         })
 
-        viewModel.answerText.observe(this, object : Observer<String> {
-            override fun onChanged(t: String?) {
-                tvAnswer.text = t
-            }
+        viewModel.answerText.observe(this, { t ->
+            tvAnswer.text = t
         })
+
+
+    }
+
+    private fun disableTheInputMethod() {
+        // remove the input method when clicked
+        etType.setOnClickListener {
+
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(etType.windowToken, 0)
+        }
     }
 
     override fun onBackPressed() {
@@ -93,8 +108,8 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
 
     override fun typeHistoryItem(equation: String, answer: String) {
         //  translating the view down
-        tvType.translationY = tvType.height.toFloat()/2
-        tvType.alpha = 0F
+        etType.translationY = etType.height.toFloat() / 2
+        etType.alpha = 0F
         tvAnswer.translationY = tvAnswer.height.toFloat()
 
         //  putting the history item data
@@ -102,7 +117,7 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
         viewModel.updateAnswer(answer)
 
         //  puling back the views
-        tvType.animate().setDuration(300).alpha(1F).translationY(0F).start()
+        etType.animate().setDuration(300).alpha(1F).translationY(0F).start()
         tvAnswer.animate().setDuration(300).translationY(0F).start()
     }
 
@@ -111,7 +126,7 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
      */
     private fun typeAnswer() {
         //  translating tvType up and off the screen then set the answer
-        tvType.translationY = (-tvType.height).toFloat()
+        etType.translationY = (-etType.height).toFloat()
         viewModel.updateEquation(formatAnswer(tvAnswer.text.toString()))
 
         //  translating tvAnswer down and then back to it position
@@ -119,7 +134,7 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
         tvAnswer.postDelayed({ tvAnswer.translationY = 0F;viewModel.updateAnswer("") }, 400)
 
         //  pull tvType back
-        tvType.animate().setDuration(300).translationY(0F).start()
+        etType.animate().setDuration(300).translationY(0F).start()
     }
 
     /**
@@ -129,9 +144,11 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
      */
     private fun formatAnswer(answerString: String): String {
         //  E is a shortcut for 10^(x
-        if (answerString.contains('E')){
-            val s = answerString.replace("E",
-                "${MULTIPLICATION_SYMBOL}10$EXPONENT_SYMBOL$LEFT_PARENTHESIS")
+        if (answerString.contains('E')) {
+            val s = answerString.replace(
+                "E",
+                "${MULTIPLICATION_SYMBOL}10$EXPONENT_SYMBOL$LEFT_PARENTHESIS"
+            )
             return "$s$RIGHT_PARENTHESIS"
         }
         return answerString
@@ -159,9 +176,9 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
      * all the keyPad buttons will trigger this function
      */
     fun buttonClicked(v: View) {
-        when(v.id){
-            R.id.clearAll-> clearAll()
-            else -> viewModel.buttonClicked(v.id)
+        when (v.id) {
+            R.id.clearAll -> clearAll()
+            else -> viewModel.buttonClicked(v.id, etType.selectionStart)
         }
     }
 
@@ -171,8 +188,8 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
      */
     private fun equals() {
         if (viewModel.makeCalculations(this)) {
-            tvType.animate().setDuration(200).alpha(0F).start()
-            tvType.postDelayed({ tvType.alpha = 1F;viewModel.updateEquation("") }, 300)
+            etType.animate().setDuration(200).alpha(0F).start()
+            etType.postDelayed({ etType.alpha = 1F;viewModel.updateEquation("") }, 300)
         }
     }
 
@@ -181,8 +198,8 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
      * use the View Model to clearing the history items database
      */
     private fun clearAll() {
-        tvType.animate().setDuration(200).alpha(0F).start()
+        etType.animate().setDuration(200).alpha(0F).start()
         tvAnswer.animate().setDuration(200).alpha(0F).start()
-        tvType.postDelayed({ viewModel.clearAll();tvType.alpha = 1F;tvAnswer.alpha = 1F }, 300)
+        etType.postDelayed({ viewModel.clearAll();etType.alpha = 1F;tvAnswer.alpha = 1F }, 300)
     }
 }

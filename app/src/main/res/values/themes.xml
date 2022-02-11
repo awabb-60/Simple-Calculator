@@ -6,12 +6,13 @@
         <item name="colorPrimaryVariant">@color/darker_light_blue</item>
         <item name="colorOnPrimary">@color/gray_blue</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/white</item>
+        <item name="colorSecondary">@color/darker_light_blue</item>
         <item name="colorSecondaryVariant">@color/white</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+
     </style>
 
 <!--    all the key will share these attributes-->
