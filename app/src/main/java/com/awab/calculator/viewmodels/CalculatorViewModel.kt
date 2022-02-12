@@ -19,7 +19,7 @@ import java.math.BigDecimal
 // TODO: 1/1/2022 order of operations
 // TODO: 2/11/2022 3*(3)3
 // templates text
-//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
+
 class CalculatorViewModel(application: Application) : AndroidViewModel(application) {
     private val TAG = "CalculatorViewModel"
     private val repository = Repository(application)
