@@ -19,7 +19,7 @@ import java.math.BigDecimal
 // TODO: 1/1/2022 order of operations
 // TODO: 2/11/2022 3*(3)3
 // templates text
-
+//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
 class CalculatorViewModel(application: Application) : AndroidViewModel(application) {
     private val TAG = "CalculatorViewModel"
     private val repository = Repository(application)
@@ -27,13 +27,16 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
     //  the mutable values for the livedata... any edit must happen on this variables
     private val _equationText: MutableLiveData<String> = MutableLiveData<String>("")
     private val _answerText: MutableLiveData<String> = MutableLiveData<String>("")
-    val c: MutableLiveData<Int> = MutableLiveData<Int>(0)
+    private val _c: MutableLiveData<Int> = MutableLiveData<Int>(0)
 
     val equationText: LiveData<String>
         get() = _equationText
 
     val answerText: LiveData<String>
         get() = _answerText
+
+    val c: LiveData<Int>
+        get() = _c
 
     /**
      * the cursor positions when the user has clicked a button
@@ -54,7 +57,7 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
         // if any change happened to the before text the cursor will after that change
         val newCursorPos = beforeText.length
         _equationText.value = beforeText + afterText
-        c.value = newCursorPos
+        _c.value = newCursorPos
 
         // updating the current pos
         // this is for the templates that call type() multiple times the current pos has to be updated
