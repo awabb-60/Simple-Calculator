@@ -2,7 +2,6 @@ package com.awab.calculator.viewmodels
 
 import android.app.Application
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
@@ -41,7 +40,7 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
     /**
      * the cursor positions when the user has clicked a button
      * -> it only used in the type function
-     * ->I make globule so i don't have to pass it to every type() call.
+     * ->I make it global so i don't have to pass it to every type() call.
      */
     private var currentCursorPos = 0
 
@@ -268,12 +267,6 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
         }
     }
 
-    fun updateCursorPos(newCursorPos: Int) {
-        if (_equationText.value.toString()[newCursorPos].toString() in cursorAfter) {
-            Log.d(TAG, "updateCursorPos: noop")
-        }
-    }
-
     /**
      * this will try to add the char to the equation text
      * @param char the char tha will get added
@@ -288,6 +281,33 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
         if (newText != null && textAfterCursor != null) {
             updateEquation(newText, textAfterCursor)
         }
+    }
+
+    /**
+     * put the answer number
+     */
+    fun answerClicked() {
+        val readyAnswerText = formatAnswer(_answerText.value!!)
+        updateEquation(readyAnswerText)
+    }
+
+    /**
+     * format the answer text to a solvable equation
+     * @param answerString the answer text
+     * @return solvable answer text
+     */
+    private fun formatAnswer(answerString: String): String {
+        //  E is a shortcut for 10^(x)
+        if (answerString.contains('E')) {
+            val s = answerString.replace(
+                "E",
+                "${MULTIPLICATION_SYMBOL}10$EXPONENT_SYMBOL$LEFT_PARENTHESIS"
+            )
+            return "$s$RIGHT_PARENTHESIS"
+            // removing the decimal point at the end of the text
+        }else if (answerString.endsWith(".0"))
+            return answerString.removeSuffix(".0")
+        return answerString
     }
 
     /**
@@ -379,4 +399,5 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
         type('n')
         type(LEFT_PARENTHESIS)
     }
+
 }

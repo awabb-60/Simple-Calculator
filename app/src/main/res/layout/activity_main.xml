@@ -20,17 +20,13 @@
         android:orientation="vertical">
 
         <EditText
-            android:id="@+id/tvType"
+            android:id="@+id/etType"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:ellipsize="start"
-            android:background="@null"
-            android:padding="8dp"
-            android:singleLine="true"
-            android:textColor="@color/black"
-            android:textSize="35sp"
-            tools:hint="Type" />
+            style="@style/typeLayout"
+            tools:ignore="LabelFor"
+            android:autofillHints="" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -50,10 +46,9 @@
                 android:id="@+id/tvAnswer"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_gravity="end"
                 android:layout_weight="1"
+                android:gravity="end"
                 android:maxLines="1"
-                android:textAlignment="textEnd"
                 android:textSize="20sp"
                 tools:hint="Answer" />
 
@@ -104,6 +99,7 @@
                     android:id="@+id/backSpace"
                     style="@style/BackSpaceButton"
                     android:layout_height="match_parent"
+                    android:contentDescription="@string/backspace_description"
                     tools:ignore="UsingOnClickInXml" />
             </TableRow>
 
@@ -248,7 +244,7 @@
         </TableLayout>
 
         <Button
-            android:id="@+id/equals"
+            android:id="@+id/btnEquals"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/equals"

@@ -2,63 +2,46 @@ package com.awab.calculator.view
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.awab.calculator.R
-import com.awab.calculator.utils.EXPONENT_SYMBOL
-import com.awab.calculator.utils.LEFT_PARENTHESIS
-import com.awab.calculator.utils.MULTIPLICATION_SYMBOL
-import com.awab.calculator.utils.RIGHT_PARENTHESIS
+import com.awab.calculator.databinding.ActivityMainBinding
 import com.awab.calculator.viewmodels.CalculatorViewModel
 
 class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
 
-    /**
-     * this will contain the equation text
-     */
-    private lateinit var etType: EditText
-
-    /**
-     * this will contain the answer text
-     */
-    private lateinit var tvAnswer: TextView
-
-    private lateinit var btnEquals: Button
-
     private lateinit var viewModel: CalculatorViewModel
-    private lateinit var fragmentContainer: View
 
-    private lateinit var tvHistory: TextView
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var etType: EditText
+    private lateinit var tvAnswer: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        etType = findViewById(R.id.tvType)
-        tvAnswer = findViewById(R.id.tvAnswer)
+        etType = binding.etType
+        tvAnswer = binding.tvAnswer
 
         disableTheInputMethod()
-        fragmentContainer = findViewById(R.id.historyFragment)
 
         //  translation the fragment off the screen at the start
         val screenWidth = windowManager.defaultDisplay.width
-        fragmentContainer.translationX = -screenWidth.toFloat()
-        tvHistory = findViewById(R.id.tvHistory)
+        binding.historyFragment.translationX = -screenWidth.toFloat()
 
         //  open or close the fragment
-        tvHistory.setOnClickListener {
+        binding.tvHistory.setOnClickListener {
             openCloseHistoryFragment()
         }
 
-        btnEquals = findViewById(R.id.equals)
+
         // start the calculations
-        btnEquals.setOnClickListener { equals() }
+        binding.btnEquals.setOnClickListener { equals() }
 
         viewModel = ViewModelProvider(this)[CalculatorViewModel::class.java]
         etType.setText(viewModel.equationText.value)
@@ -66,10 +49,9 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
 
         // to put the answer text in the equation text
         tvAnswer.setOnClickListener {
-            if (etType.text.isEmpty())
+            if (binding.etType.text.isEmpty())
                 typeAnswer()
         }
-
         //  putting the observers to update the views
         viewModel.equationText.observe(this, { t ->
             etType.editableText.clear()
@@ -80,10 +62,8 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
         })
 
         viewModel.answerText.observe(this, { t ->
-            tvAnswer.text = t
+            binding.tvAnswer.text = t
         })
-
-
     }
 
     private fun disableTheInputMethod() {
@@ -127,7 +107,9 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
     private fun typeAnswer() {
         //  translating tvType up and off the screen then set the answer
         etType.translationY = (-etType.height).toFloat()
-        viewModel.updateEquation(formatAnswer(tvAnswer.text.toString()))
+
+        // put the answer in the type
+        viewModel.answerClicked()
 
         //  translating tvAnswer down and then back to it position
         tvAnswer.animate().setDuration(300).translationY(tvAnswer.height.toFloat()).start()
@@ -138,35 +120,18 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
     }
 
     /**
-     * format the answer text to a solvable equation
-     * @param answerString the answer text
-     * @return solvable answer text
-     */
-    private fun formatAnswer(answerString: String): String {
-        //  E is a shortcut for 10^(x
-        if (answerString.contains('E')) {
-            val s = answerString.replace(
-                "E",
-                "${MULTIPLICATION_SYMBOL}10$EXPONENT_SYMBOL$LEFT_PARENTHESIS"
-            )
-            return "$s$RIGHT_PARENTHESIS"
-        }
-        return answerString
-    }
-
-    /**
      * open and close the history fragment with animations
      */
     private fun openCloseHistoryFragment() {
         viewModel.historyFragmentActive = if (!viewModel.historyFragmentActive) {
             // show the history fragment
-            tvHistory.setText(R.string.keyPad)
-            fragmentContainer.animate().setDuration(300).translationX(0F).start()
+            binding.tvHistory.setText(R.string.keyPad)
+            binding.historyFragment.animate().setDuration(300).translationX(0F).start()
             true
         } else {
             // un show the history fragment
-            tvHistory.setText(R.string.history)
-            fragmentContainer.animate().setDuration(300).translationX(-fragmentContainer.width.toFloat())
+            binding.tvHistory.setText(R.string.history)
+            binding.historyFragment.animate().setDuration(300).translationX(-binding.historyFragment.width.toFloat())
                 .start()
             false
         }

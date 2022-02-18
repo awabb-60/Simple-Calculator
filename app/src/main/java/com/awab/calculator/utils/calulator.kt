@@ -1,7 +1,5 @@
 package com.awab.calculator.utils
 
-import kotlin.collections.ArrayList
-
 /**
  * this function take a list of token and check if it solvable and ready to get passed to the Parser
  */
@@ -10,6 +8,46 @@ fun isSolvable(list: List<Token>) {
     if (list.count { it.tokenType == TokenType.NUMBER } == 0) {
         error(SYNTAX_ERROR)
     }
+
+    // it find if there is a number in wrong position
+    val anyWrongPositionedNumber: (List<Token>) -> Boolean = { listTokens ->
+        var anyWrongPositionedNumber = false
+        // looping throw the number tokens
+        for (number in listTokens.filter { it.tokenType == TokenType.NUMBER }) {
+            val bNumbers = arrayOf(
+                TokenType.ADDITION, TokenType.SUBTRACT, TokenType.MULTIPLICATION,
+                TokenType.DIVISION, TokenType.EXPONENT, TokenType.L_PARENTHESIS
+            )
+            val aNumbers = arrayOf(
+                TokenType.ADDITION, TokenType.SUBTRACT, TokenType.MULTIPLICATION,
+                TokenType.DIVISION, TokenType.EXPONENT, TokenType.R_PARENTHESIS
+            )
+
+            // check it its not the first token
+            if (number != listTokens.first()) {
+                val beforeToken = listTokens[listTokens.indexOf(number) - 1].tokenType
+                // the this number token not in a correct position
+                if (beforeToken !in bNumbers) {
+                    anyWrongPositionedNumber = true
+                    break
+                }
+            }
+            // check if its not the last token
+            if (number != listTokens.last()) {
+                val afterToken = listTokens[listTokens.indexOf(number) + 1].tokenType
+                // the this number token not in a correct position
+                if (afterToken !in aNumbers) {
+                    anyWrongPositionedNumber = true
+                    break
+                }
+            }
+        }
+        anyWrongPositionedNumber
+    }
+
+    // check the number positions
+    if (anyWrongPositionedNumber(list))
+        error(SYNTAX_ERROR)
 
     //  must ends with number or ")"
     if (list.last().tokenType != TokenType.NUMBER && list.last().tokenType != TokenType.R_PARENTHESIS) {
@@ -115,10 +153,10 @@ fun filterInput(text: String, char: Char): String {
             newText = "$text$MULTIPLICATION_SYMBOL$char"
         }
 
-    //  Number after ")" auto place "*" before it
+        //  Number after ")" auto place "*" before it
     } else if (char in (DIGITS + PI_SYMBOL + e_SYMBOL)) {
         if (text.isNotEmpty()) {
-            if (text.last() in listOf(RIGHT_PARENTHESIS,PI_SYMBOL, e_SYMBOL))
+            if (text.last() in listOf(RIGHT_PARENTHESIS, PI_SYMBOL, e_SYMBOL))
                 newText = "$text$MULTIPLICATION_SYMBOL$char"
             //  Pi after DIGITS or Pi or e auto place "*" before it
             if (text.last() in (DIGITS + PI_SYMBOL + e_SYMBOL) && char in "$PI_SYMBOL$e_SYMBOL")
@@ -154,7 +192,7 @@ fun filterInput(text: String, char: Char): String {
     else if (char == RIGHT_PARENTHESIS) {
         if (text.count { it == LEFT_PARENTHESIS } == text.count { it == RIGHT_PARENTHESIS }) {
             newText = text
-        //  can only place ")" after a number or another ")"
+            //  can only place ")" after a number or another ")"
         } else if (text.last() !in (DIGITS + PI_SYMBOL + e_SYMBOL) && text.last() != RIGHT_PARENTHESIS)
             newText = text
     }

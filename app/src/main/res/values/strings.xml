@@ -36,6 +36,8 @@
     <string name="history">History</string>
     <string name="keyPad">KeyPad</string>
     <string name="backspace">backspace</string>
+
+    <string name="backspace_description">backspace button</string>
     <string name="clear">clear</string>
     <string name="no_history">no history</string>
 </resources>

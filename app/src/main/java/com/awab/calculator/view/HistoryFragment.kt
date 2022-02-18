@@ -6,29 +6,40 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.awab.calculator.other.HistoryAdapter
-import com.awab.calculator.R
+import com.awab.calculator.databinding.FragmentHistoryBinding
 import com.awab.calculator.viewmodels.CalculatorViewModel
 
 class HistoryFragment : Fragment(), HistoryAdapter.HistoryClickListener {
 
     private lateinit var viewModel:CalculatorViewModel
     private lateinit var listener:FragmentListener
+    private var _binding: FragmentHistoryBinding? = null
+
+    private val binding:FragmentHistoryBinding
+    get() = _binding!!
+
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is FragmentListener) listener = context
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_history, container, false)
+    ): View {
+        _binding = FragmentHistoryBinding.inflate(inflater)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(requireActivity())[CalculatorViewModel::class.java]
 
-        val rv = view.findViewById<RecyclerView>(R.id.rvHistory)
-        val btnClear = view.findViewById<Button>(R.id.btnClearHistory)
+        val rv = binding.rvHistory
+        val btnClear = binding.btnClearHistory
 
         //  clearing the history items database and close the fragment
         btnClear.setOnClickListener {
@@ -45,7 +56,6 @@ class HistoryFragment : Fragment(), HistoryAdapter.HistoryClickListener {
         }
         viewModel.historyItems.observe(viewLifecycleOwner,{
             adapter.submitList(it)
-
             //  to scroll to the new added item... 0 because the rv stack from the  end
             // TODO: 1/7/2022 scroll to the new added item
             if (it.isEmpty()){
@@ -54,14 +64,12 @@ class HistoryFragment : Fragment(), HistoryAdapter.HistoryClickListener {
                 btnClear.visibility = View.VISIBLE
             }
         })
-        return view
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is FragmentListener) listener = context
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
-
     override fun onItemClicked(equation:String, answer:String) {
         listener.typeHistoryItem(equation,answer)
     }

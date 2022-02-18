@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     tools:context=".view.MainActivity">
 
@@ -20,16 +20,13 @@
         android:orientation="vertical">
 
         <EditText
-            android:id="@+id/tvType"
+            android:id="@+id/etType"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:ellipsize="start"
-            android:padding="8dp"
-            android:singleLine="true"
-            android:textColor="@color/black"
-            android:textSize="35sp"
-            tools:hint="Type" />
+            style="@style/typeLayout"
+            tools:ignore="LabelFor"
+            android:autofillHints="" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -120,7 +117,7 @@
                     android:id="@+id/backSpace"
                     style="@style/BackSpaceButton"
                     android:layout_height="match_parent"
-                    />
+                    android:contentDescription="@string/backspace_description" />
             </TableRow>
 
             <TableRow android:background="@color/darker_light_blue">
@@ -182,6 +179,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     app:button_text="@string/tan" />
+
                 <com.awab.calculator.view.CustomSelectableTextView
                     android:id="@+id/t1"
                     style="@style/LandScapeCustomButtonStyle"
@@ -229,6 +227,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     app:button_text="@string/ln" />
+
                 <com.awab.calculator.view.CustomSelectableTextView
                     android:id="@+id/t2"
                     style="@style/LandScapeCustomButtonStyle"
@@ -318,7 +317,7 @@
         </TableLayout>
 
         <Button
-            android:id="@+id/equals"
+            android:id="@+id/btnEquals"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/equals"
