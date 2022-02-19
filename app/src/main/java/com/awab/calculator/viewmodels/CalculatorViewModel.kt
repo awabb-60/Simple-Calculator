@@ -311,7 +311,7 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     /**
-     * this is a template for: 10 to the power of, 10^x
+     * this is a template for: 10 to the power of x, 10^x
      */
     private fun type10ToThePower() {
         if (_equationText.value == null)
@@ -399,5 +399,4 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
         type('n')
         type(LEFT_PARENTHESIS)
     }
-
 }

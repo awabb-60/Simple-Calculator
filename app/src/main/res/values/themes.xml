@@ -24,6 +24,9 @@
         <item name="android:background">@null</item>
     </style>
 
+    <style name="historyItemCardStyle">
+        <item name="cardBackgroundColor">@color/white</item>
+    </style>
 <!--    all the key will share these attributes-->
     <style name="KeyPadButton">
         <item name="android:onClick">buttonClicked</item>

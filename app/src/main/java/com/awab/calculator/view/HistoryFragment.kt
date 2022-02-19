@@ -56,11 +56,16 @@ class HistoryFragment : Fragment(), HistoryAdapter.HistoryClickListener {
         }
         viewModel.historyItems.observe(viewLifecycleOwner,{
             adapter.submitList(it)
-            //  to scroll to the new added item... 0 because the rv stack from the  end
-            // TODO: 1/7/2022 scroll to the new added item
+
+            // scrolling to the last / bottom history item
+            if (it.isNotEmpty())
+                rv.smoothScrollToPosition(it.indices.last)
+
             if (it.isEmpty()){
+                // removing the rv and the clear button
                 btnClear.visibility = View.GONE
             }else{
+                // showing the rv and the clear button
                 btnClear.visibility = View.VISIBLE
             }
         })

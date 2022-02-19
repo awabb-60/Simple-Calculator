@@ -39,7 +39,6 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
             openCloseHistoryFragment()
         }
 
-
         // start the calculations
         binding.btnEquals.setOnClickListener { equals() }
 
@@ -127,12 +126,18 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
             // show the history fragment
             binding.tvHistory.setText(R.string.keyPad)
             binding.historyFragment.animate().setDuration(300).translationX(0F).start()
+
+            // making the fragment clickable so the click event doesn't go to the keyPad
+            binding.historyFragment.isClickable = true
             true
         } else {
             // un show the history fragment
             binding.tvHistory.setText(R.string.history)
             binding.historyFragment.animate().setDuration(300).translationX(-binding.historyFragment.width.toFloat())
                 .start()
+
+            // taking the focus form the fragment to start using the keyPad
+            binding.historyFragment.isClickable = false
             false
         }
     }

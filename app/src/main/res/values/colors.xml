@@ -6,6 +6,7 @@
     <color name="op">#00FFFFFF</color>
     <color name="gray">#EEEFEF</color>
 
+    <color name="historyItemDarkBackground">#131313</color>
     <color name="dark_fad_gray">#202323</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
