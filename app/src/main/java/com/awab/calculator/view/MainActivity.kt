@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
             etType.editableText.clear()
             etType.editableText.append(t)
         })
-        viewModel.courserPosition.observe(this, { pos ->
+        viewModel.cursorPosition.observe(this, { pos ->
             etType.setSelection(pos)
         })
 
@@ -70,9 +70,11 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
     private fun disableTheInputMethod() {
         // remove the input method when clicked
         etType.setOnClickListener {
-
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(etType.windowToken, 0)
+            // no need to refactor at the start
+            if(etType.selectionStart > 0)
+                viewModel.refactorCursorPosition(etType.selectionStart-1)
         }
     }
 

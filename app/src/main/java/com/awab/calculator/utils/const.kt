@@ -81,11 +81,10 @@ val symbolsWillChangeAnyBeforeIt = arrayOf(EXPONENT_SYMBOL, MULTIPLICATION_SYMBO
 val autoPlaceMultiplicationBefore =
     arrayOf(LEFT_PARENTHESIS, SQUARE_ROOT_SYMBOL, SIN_SYMBOL, COS_SYMBOL, TAN_SYMBOL, LN_SYMBOL)
 
+
 /**
  * the cursor must always be after one of these
  */
-val cursorAfter = arrayOf(
-    TokenType.SUBTRACT, TokenType.ADDITION, TokenType.NUMBER,
-    TokenType.MULTIPLICATION, TokenType.DIVISION, TokenType.EXPONENT,
-
-).map { it.toString() }
+val cursorCantBeAfter = arrayOf(
+    TokenType.SIN, TokenType.COS, TokenType.TAN,
+    TokenType.LN, TokenType.SQUARE_ROOT)

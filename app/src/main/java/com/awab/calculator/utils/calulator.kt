@@ -49,6 +49,7 @@ fun isSolvable(list: List<Token>) {
     if (anyWrongPositionedNumber(list))
         error(SYNTAX_ERROR)
 
+    // check if the user inserted any thing after
     //  must ends with number or ")"
     if (list.last().tokenType != TokenType.NUMBER && list.last().tokenType != TokenType.R_PARENTHESIS) {
         error(SYNTAX_ERROR)

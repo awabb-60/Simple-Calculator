@@ -47,7 +47,9 @@ class Lexer {
                 break
         }
 
-        tokens = negativePositiveTokens(tokens)
+        if (tokens.isNotEmpty())
+            tokens = negativePositiveTokens(tokens)
+
         return tokens
     }
 
@@ -185,5 +187,16 @@ class Lexer {
             }
         }
         return token
+    }
+
+    /**
+     * this will take one char and return the token of that char if it has a token
+     * else it return null
+     * @param char the char that will be a token
+     * @return the token of the char or null if the char has no token
+     */
+    fun generateToken(char: Char): Token? {
+        val token = generateTokens(char.toString())
+        return if (token.isEmpty()) null else token[0]
     }
 }

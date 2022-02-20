@@ -17,7 +17,9 @@ import kotlinx.coroutines.launch
 // TODO: 1/1/2022 order of operations
 
 // test  1*- null
-// test 9/-9
+//9-9
+// si3n(3)
+// si-n(3)
 // -0
 
 class CalculatorViewModel(application: Application) : AndroidViewModel(application) {
@@ -26,7 +28,7 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
     //  the mutable values for the livedata... any edit must happen on this variables
     private val _equationText: MutableLiveData<String> = MutableLiveData<String>("")
     private val _answerText: MutableLiveData<String> = MutableLiveData<String>("")
-    private val _courserPosition: MutableLiveData<Int> = MutableLiveData<Int>(0)
+    private val _cursorPosition: MutableLiveData<Int> = MutableLiveData<Int>(0)
 
     val equationText: LiveData<String>
         get() = _equationText
@@ -34,8 +36,8 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
     val answerText: LiveData<String>
         get() = _answerText
 
-    val courserPosition: LiveData<Int>
-        get() = _courserPosition
+    val cursorPosition: LiveData<Int>
+        get() = _cursorPosition
 
     /**
      * the cursor positions when the user has clicked a button
@@ -56,7 +58,7 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
         // if any change happened to the before text the cursor will after that change
         val newCursorPos = beforeText.length
         _equationText.value = beforeText + afterText
-        _courserPosition.value = newCursorPos
+        _cursorPosition.value = newCursorPos
 
         // updating the current pos
         // this is for the templates that call type() multiple times the current pos has to be updated
@@ -402,5 +404,24 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
         type(LN_SYMBOL)
         type('n')
         type(LEFT_PARENTHESIS)
+    }
+
+    /**
+     * this make sure the cursor is in a place that doesn't make a trouble
+     * like: Si|n(
+     */
+    fun refactorCursorPosition(position: Int) {
+        var newPosition = position
+        val lexer = Lexer()
+        var currentToken = lexer.generateToken(_equationText.value?.get(newPosition)!!)
+
+        // while the cursor in a wrong position
+        while (currentToken == null || currentToken.tokenType in cursorCantBeAfter){
+            newPosition++
+            currentToken = lexer.generateToken(_equationText.value?.get(newPosition)!!)
+        }
+        // because the position of the cursor is the position of the char before it
+        newPosition++
+       _cursorPosition.value = newPosition
     }
 }
