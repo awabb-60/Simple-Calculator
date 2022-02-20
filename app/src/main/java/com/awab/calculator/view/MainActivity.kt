@@ -12,6 +12,8 @@ import com.awab.calculator.R
 import com.awab.calculator.databinding.ActivityMainBinding
 import com.awab.calculator.viewmodels.CalculatorViewModel
 
+// infinity
+// see -0
 class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
 
     private lateinit var viewModel: CalculatorViewModel
@@ -56,7 +58,7 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
             etType.editableText.clear()
             etType.editableText.append(t)
         })
-        viewModel.c.observe(this, { pos ->
+        viewModel.courserPosition.observe(this, { pos ->
             etType.setSelection(pos)
         })
 

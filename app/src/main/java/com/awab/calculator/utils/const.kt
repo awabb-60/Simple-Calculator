@@ -47,7 +47,7 @@ val ORDER_OF_OPERATIONS = arrayOf(
 val SINGS = listOf(TokenType.SUBTRACT, TokenType.ADDITION)
 
 /**
- * if any subtraction or additi
+ * if any subtraction or addition
  * on symbol came after these tokes, it will be treated as a sign - +
  * example: 1×-2 , 1÷- 1
  */

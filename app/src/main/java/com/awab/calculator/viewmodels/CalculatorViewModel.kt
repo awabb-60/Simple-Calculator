@@ -13,20 +13,20 @@ import com.awab.calculator.data.Repository
 import com.awab.calculator.utils.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.math.BigDecimal
 
 // TODO: 1/1/2022 order of operations
-// TODO: 2/11/2022 3*(3)3
-// templates text
+
+// test  1*- null
+// test 9/-9
+// -0
 
 class CalculatorViewModel(application: Application) : AndroidViewModel(application) {
-    private val TAG = "CalculatorViewModel"
     private val repository = Repository(application)
 
     //  the mutable values for the livedata... any edit must happen on this variables
     private val _equationText: MutableLiveData<String> = MutableLiveData<String>("")
     private val _answerText: MutableLiveData<String> = MutableLiveData<String>("")
-    private val _c: MutableLiveData<Int> = MutableLiveData<Int>(0)
+    private val _courserPosition: MutableLiveData<Int> = MutableLiveData<Int>(0)
 
     val equationText: LiveData<String>
         get() = _equationText
@@ -34,8 +34,8 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
     val answerText: LiveData<String>
         get() = _answerText
 
-    val c: LiveData<Int>
-        get() = _c
+    val courserPosition: LiveData<Int>
+        get() = _courserPosition
 
     /**
      * the cursor positions when the user has clicked a button
@@ -56,7 +56,7 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
         // if any change happened to the before text the cursor will after that change
         val newCursorPos = beforeText.length
         _equationText.value = beforeText + afterText
-        _c.value = newCursorPos
+        _courserPosition.value = newCursorPos
 
         // updating the current pos
         // this is for the templates that call type() multiple times the current pos has to be updated
@@ -85,21 +85,25 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
         val answer = solve(closeParenthesis(_equationText.value!!))
 
         return try {
-            var newAnswer = BigDecimal.valueOf(answer.toDouble()).toString()
+            /* checking if the answer is a number or an error message buy calling toBigDecimal()
+             if the answer is an error message it will catch the error and toast the message
+              */
+            val answerString = answer.toBigDecimal().toString()
 
-            //  formatting some kotlin math stuff
-            if (newAnswer == "-0")
-                newAnswer = "0"
-
-            _answerText.value = newAnswer
-
+            _answerText.value = answerString
             //  saving the equation
             insertHistory(HistoryItem(equation = _equationText.value!!, answer = answer))
             true
         } catch (e: Exception) {
+            //  an error occurred... showing a toast
             _answerText.value = ""
-            //  an error occurred... showing the toast
-            Toast.makeText(context, answer, Toast.LENGTH_SHORT).show()
+
+            // when the answer is too big it will come as Infinity
+            // showing a better message
+            if (answer == Double.POSITIVE_INFINITY.toString()){
+                Toast.makeText(context, "the answer is too big...", Toast.LENGTH_SHORT).show()
+            }else // the normal error message
+                Toast.makeText(context, answer, Toast.LENGTH_SHORT).show()
             false
         }
 
@@ -305,7 +309,7 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
             )
             return "$s$RIGHT_PARENTHESIS"
             // removing the decimal point at the end of the text
-        }else if (answerString.endsWith(".0"))
+        } else if (answerString.endsWith(".0"))
             return answerString.removeSuffix(".0")
         return answerString
     }

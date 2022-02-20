@@ -51,7 +51,6 @@ class Lexer {
         return tokens
     }
 
-
     /**
      * to care where the subtraction and addition symbol might act as a sign
      * like:"-1,*-1,/-1,-(1)"  "+1,*+1,/+1,+(1)"
@@ -102,12 +101,14 @@ class Lexer {
                 //  save the token and then start the check
                 if (!gotToNext())
                     break
-                //  check
-                if (currentToken.tokenType in SINGS) {
+
+                //  check if this token can be treated as signs and if there is another token after it
+                if (currentToken.tokenType in SINGS && tokenIterator.hasNext()) {
                     val tokenSign = if (currentToken.tokenType == TokenType.SUBTRACT) -1.0
                     else 1.0
-                    //  no need to check the next because - must not be in the end (filterInput)
-                    currentToken = tokenIterator.next()
+
+                    // go to the token after the sign
+                    gotToNext()
                     //  if it's a number token the value of the number will multiply by the sign and saved
                     //  this the next token after the sign
                     //  the sign will not be saved

@@ -8,6 +8,10 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.awab.calculator.R
 
+/**
+ * this is a custom text view
+ * with this you can set any background drawable to this textView and it will still has the ripple effect
+ */
 class CustomSelectableTextView(context: Context, attr: AttributeSet) : LinearLayout(context, attr) {
 
     init {
@@ -21,8 +25,8 @@ class CustomSelectableTextView(context: Context, attr: AttributeSet) : LinearLay
             val attributes = context.obtainStyledAttributes(it, R.styleable.CustomSelectableTextView)
             try {
                 // the back ground of the button
-                val backGroundColor = attributes.getDrawable(R.styleable.CustomSelectableTextView_button_background)
-                background = backGroundColor
+                val backgroundColor = attributes.getDrawable(R.styleable.CustomSelectableTextView_button_background)
+                setBackgroundDrawable(backgroundColor)
                 val tv = TextView(context).apply {
                     // adding the attributes
                     gravity = Gravity.CENTER
@@ -44,9 +48,10 @@ class CustomSelectableTextView(context: Context, attr: AttributeSet) : LinearLay
                 this.findViewById<TextView>(R.id.buttonText).apply {
                     layoutParams.width = LayoutParams.MATCH_PARENT
                     layoutParams.height = LayoutParams.MATCH_PARENT
+
                     // calling the parent on click listener
                     setOnClickListener {
-                        this@CustomSelectableTextView.callOnClick()
+                        this@CustomSelectableTextView.performClick()
                     }
                 }
             } finally {
