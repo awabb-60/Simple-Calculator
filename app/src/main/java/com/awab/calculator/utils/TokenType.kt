@@ -2,9 +2,9 @@ package com.awab.calculator.utils
 
 /**
  * this class hold all the possible token types that the lexer can make
- * @param typeString the String that will get returned when using .toString()
+ * @param displayString the String that will get returned when using .toString()
  */
-enum class TokenType(private val typeString: String) {
+enum class TokenType(private val displayString: String) {
     NUMBER("num"),
     ADDITION(ADDITION_SYMBOL.toString()),
     SUBTRACT(SUBTRACTION_SYMBOL.toString()),
@@ -17,10 +17,9 @@ enum class TokenType(private val typeString: String) {
     SIN(SIN_SYMBOL+"in"),
     COS(COS_SYMBOL+"os"),
     TAN(TAN_SYMBOL+"an"),
-
     LN(LN_SYMBOL+"n");
 
     override fun toString(): String {
-        return typeString
+        return displayString
     }
 }

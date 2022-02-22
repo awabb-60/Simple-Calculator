@@ -238,19 +238,19 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
                 type(DIVISION_SYMBOL)
             }
             R.id.squareRoot -> {
-                typeSquareRoot()
+                typeEndWithParenthesis(SQUARE_ROOT_SYMBOL.toString())
             }
             R.id.sin -> {
-                typeSin()
+                typeEndWithParenthesis(TokenType.SIN.toString())
             }
             R.id.cos -> {
-                typeCos()
+                typeEndWithParenthesis(TokenType.COS.toString())
             }
             R.id.tan -> {
-                typeTan()
+                typeEndWithParenthesis(TokenType.TAN.toString())
             }
             R.id.ln -> {
-                typeLn()
+                typeEndWithParenthesis(TokenType.LN.toString())
             }
             R.id.lParenthesis -> {
                 type(LEFT_PARENTHESIS)
@@ -290,33 +290,6 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     /**
-     * put the answer number
-     */
-    fun answerClicked() {
-        val readyAnswerText = formatAnswer(_answerText.value!!)
-        updateEquation(readyAnswerText)
-    }
-
-    /**
-     * format the answer text to a solvable equation
-     * @param answerString the answer text
-     * @return solvable answer text
-     */
-    private fun formatAnswer(answerString: String): String {
-        //  E is a shortcut for 10^(x)
-        if (answerString.contains('E')) {
-            val s = answerString.replace(
-                "E",
-                "${MULTIPLICATION_SYMBOL}10$EXPONENT_SYMBOL$LEFT_PARENTHESIS"
-            )
-            return "$s$RIGHT_PARENTHESIS"
-            // removing the decimal point at the end of the text
-        } else if (answerString.endsWith(".0"))
-            return answerString.removeSuffix(".0")
-        return answerString
-    }
-
-    /**
      * this is a template for: 10 to the power of x, 10^x
      */
     private fun type10ToThePower() {
@@ -343,7 +316,6 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
             _equationText.value!!.last() !in "$DIGITS$RIGHT_PARENTHESIS"
         )
             return
-
         //  the template...
         type(EXPONENT_SYMBOL)
         type(LEFT_PARENTHESIS)
@@ -360,50 +332,41 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     /**
-     * type square root symbol to the equation
+     * type the symbols that ends with an left parentheses e.g Sin(
+     * @param text the text before the left parentheses
      */
-    private fun typeSquareRoot() {
-        type(SQUARE_ROOT_SYMBOL)
+    private fun typeEndWithParenthesis(text: String){
+        text.forEach {
+            type(it)
+        }
         type(LEFT_PARENTHESIS)
     }
 
     /**
-     * type sin symbol to the equation
+     * put the answer number
      */
-    private fun typeSin() {
-        type(SIN_SYMBOL)
-        type('i')
-        type('n')
-        type(LEFT_PARENTHESIS)
+    fun answerClicked() {
+        val readyAnswerText = formatAnswer(_answerText.value!!)
+        updateEquation(readyAnswerText)
     }
 
     /**
-     * type cos symbol to the equation
+     * format the answer text to a solvable equation
+     * @param answerString the answer text
+     * @return solvable answer text
      */
-    private fun typeCos() {
-        type(COS_SYMBOL)
-        type('o')
-        type('s')
-        type(LEFT_PARENTHESIS)
-    }
-
-    /**
-     * type tan symbol to the equation
-     */
-    private fun typeTan() {
-        type(TAN_SYMBOL)
-        type('a')
-        type('n')
-        type(LEFT_PARENTHESIS)
-    }
-
-    /**
-     * type ln symbol to the equation
-     */
-    private fun typeLn() {
-        type(LN_SYMBOL)
-        type('n')
-        type(LEFT_PARENTHESIS)
+    private fun formatAnswer(answerString: String): String {
+        //  E is a shortcut for 10^(x)
+        if (answerString.contains('E')) {
+            val s = answerString.replace(
+                "E",
+                "${MULTIPLICATION_SYMBOL}10$EXPONENT_SYMBOL$LEFT_PARENTHESIS"
+            )
+            return "$s$RIGHT_PARENTHESIS"
+            // removing the decimal point at the end of the text
+        } else if (answerString.endsWith(".0"))
+            return answerString.removeSuffix(".0")
+        return answerString
     }
 
     /**

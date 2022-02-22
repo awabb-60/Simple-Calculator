@@ -1,7 +1,6 @@
 package com.awab.calculator
 
 import org.junit.Test
-
 import org.junit.Assert.*
 
 /**

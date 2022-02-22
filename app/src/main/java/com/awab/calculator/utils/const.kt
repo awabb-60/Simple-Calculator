@@ -29,7 +29,6 @@ const val SYNTAX_ERROR = "syntax error!"
 const val DIVISION_ERROR = "cannot divide by zero!"
 const val MATH_ERROR = "Math error!"
 
-
 /**
  * the order of the math operations
  */
@@ -39,7 +38,6 @@ val ORDER_OF_OPERATIONS = arrayOf(
     arrayOf(TokenType.MULTIPLICATION, TokenType.DIVISION),
     arrayOf(TokenType.ADDITION, TokenType.SUBTRACT),
 )
-
 
 /**
  * the negative and the positive sign... the
@@ -80,7 +78,6 @@ val symbolsWillChangeAnyBeforeIt = arrayOf(EXPONENT_SYMBOL, MULTIPLICATION_SYMBO
  */
 val autoPlaceMultiplicationBefore =
     arrayOf(LEFT_PARENTHESIS, SQUARE_ROOT_SYMBOL, SIN_SYMBOL, COS_SYMBOL, TAN_SYMBOL, LN_SYMBOL)
-
 
 /**
  * the cursor must always be after one of these
