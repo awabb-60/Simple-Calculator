@@ -1,5 +1,6 @@
 package com.awab.calculator.utils
 
+import java.lang.Exception
 import kotlin.math.*
 
 /**
@@ -17,7 +18,9 @@ interface Node{
  * @param number the number of th node
  */
 class NumberNode(private val number: Double): Node {
+
     override fun getValue() = number
+
     override fun toString(): String {
         return "Number Node :$number"
     }
@@ -30,6 +33,7 @@ class NumberNode(private val number: Double): Node {
  * @param node2 the node on the right of the plus operation
  */
 class AdditionNode(private val node1:Node, private val node2:Node):Node{
+
     override fun getValue() = node1.getValue() + node2.getValue()
 
     override fun toString(): String {
@@ -43,7 +47,8 @@ class AdditionNode(private val node1:Node, private val node2:Node):Node{
  * @param node1 the node on the left of the minus operation
  * @param node2 the node on the right of the minus operation
  */
-class SubtractNode(private val node1:Node, private val node2:Node):Node{
+class SubtractionNode(private val node1:Node, private val node2:Node):Node{
+
     override fun getValue() = node1.getValue() - node2.getValue()
 
     override fun toString(): String {
@@ -58,10 +63,8 @@ class SubtractNode(private val node1:Node, private val node2:Node):Node{
  * @param node2 the node on the right of the exponent operation
  */
 class ExponentNode(private val node1:Node, private val node2:Node):Node{
-    override fun getValue():Double{
 
-        return node1.getValue().pow(node2.getValue())
-    }
+    override fun getValue() = node1.getValue().pow(node2.getValue())
 
     override fun toString(): String {
         return "(ExponentNode: $node1 ^ $node2)"
@@ -75,6 +78,7 @@ class ExponentNode(private val node1:Node, private val node2:Node):Node{
  * @param node2 the node on the right of the multiply operation
  */
 class MultiplicationNode(private val node1:Node, private val node2:Node):Node{
+
     override fun getValue() = node1.getValue().times(node2.getValue())
 
     override fun toString(): String {
@@ -109,14 +113,19 @@ class DivisionNode(private val node1:Node, private val node2:Node):Node{
  * @param sign the sign the was left to this node in the equation it will be -1 or +1
  */
 class ParenthesisNode(private var tokens:ArrayList<Token>,private val sign:Double): Node {
-    private var tree = Any()
-    override fun getValue(): Double {
-        //  generate new tree from these tokens
-        val parser = Parser()
-        tree = parser.generateTree(tokens)
 
-        //  multiplying the value of this tree with this sign and returning it
-        return (tree as Node).getValue() * sign
+    override fun getValue(): Double {
+        // getting the value of the tokens
+        val result = Calculator().solve(tokens)
+        try {
+            // the answer is a number
+            result.toDouble()
+        }catch (e:Exception){
+            // the answer is am error message
+            error(result)
+        }
+        // the answer is a number
+        return result.toDouble()
     }
     override fun toString(): String {
         return "(ParenthesisNode: $tokens)"
@@ -134,8 +143,10 @@ class ParenthesisNode(private var tokens:ArrayList<Token>,private val sign:Doubl
  */
 class SquareRootNode(private val node: Node, private val sign: Double):Node{
     override fun getValue():Double{
+        // cant find square root for negative numbers
         if (node.getValue() < 0.0)
             error(MATH_ERROR)
+
         return sign * sqrt(node.getValue())
     }
     override fun toString(): String {
@@ -152,9 +163,9 @@ class SquareRootNode(private val node: Node, private val sign: Double):Node{
  * @param sign the sign the was left to this node in the equation it will be -1 or +1
  */
 class SinNode(private val node: Node, private val sign: Double):Node{
-    override fun getValue():Double{
-        return sign * sin(Math.toRadians(node.getValue()))
-    }
+
+    override fun getValue() = sign * sin(Math.toRadians(node.getValue()))
+
     override fun toString(): String {
         return "(SinNode: sin{$node})"
     }
@@ -169,13 +180,14 @@ class SinNode(private val node: Node, private val sign: Double):Node{
  * @param sign the sign the was left to this node in the equation it will be -1 or +1
  */
 class CosNode(private val node: Node, private val sign: Double):Node{
-    override fun getValue():Double{
-        return sign * cos(Math.toRadians(node.getValue()))
-    }
+
+    override fun getValue() = sign * cos(Math.toRadians(node.getValue()))
+
     override fun toString(): String {
         return "(CosNode: cos{$node})"
     }
 }
+
 
 /**
  * this node takes one Node as parameter, (parenthesisNode)
@@ -186,9 +198,9 @@ class CosNode(private val node: Node, private val sign: Double):Node{
  * @param sign the sign the was left to this node in the equation it will be -1 or +1
  */
 class TanNode(private val node: Node, private val sign: Double):Node{
-    override fun getValue():Double{
-        return sign * tan(Math.toRadians(node.getValue()))
-    }
+
+    override fun getValue() = sign * tan(Math.toRadians(node.getValue()))
+
     override fun toString(): String {
         return "(TanNode: tan{$node})"
     }
@@ -203,9 +215,13 @@ class TanNode(private val node: Node, private val sign: Double):Node{
  * @param sign the sign the was left to this node in the equation it will be -1 or +1
  */
 class LnNode(private val node: Node,private val sign: Double):Node{
+
     override fun getValue():Double{
+        if (node.getValue() < 0.0)
+            error(MATH_ERROR)
         return sign * ln(node.getValue())
     }
+
     override fun toString(): String {
         return "(LnNode: ln{$node})"
     }

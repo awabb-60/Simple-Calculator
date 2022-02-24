@@ -50,6 +50,7 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
 
     val historyItems = repository.getAllHistoryItems()
 
+    private val calculator = Calculator()
     /**
      * this function will change the value of the equation text
      */
@@ -84,7 +85,7 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
         //  answer will come as a number if every thing was good
         //  and it will come as the error message when error occur
 
-        val answer = solve(closeParenthesis(_equationText.value!!))
+        val answer = calculator.solve(closeParenthesis(_equationText.value!!))
 
         return try {
             /* checking if the answer is a number or an error message buy calling toBigDecimal()
@@ -119,8 +120,8 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
      */
     private fun closeParenthesis(text: String): String {
         var oldValue = text
-        while (filterInput(oldValue, RIGHT_PARENTHESIS) != oldValue) {
-            oldValue = filterInput(oldValue, RIGHT_PARENTHESIS)
+        while (calculator.filterInput(oldValue, RIGHT_PARENTHESIS) != oldValue) {
+            oldValue = calculator.filterInput(oldValue, RIGHT_PARENTHESIS)
         }
         return oldValue
     }
@@ -282,7 +283,7 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
         val textAfterCursor = _equationText.value?.removeRange(0, currentCursorPos)
 
         // only applying the text filter to the text before the cursor
-        val newText = textBeforeCursor?.let { filterInput(it, char) }
+        val newText = textBeforeCursor?.let { calculator.filterInput(it, char) }
 
         if (newText != null && textAfterCursor != null) {
             updateEquation(newText, textAfterCursor)

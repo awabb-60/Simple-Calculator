@@ -53,7 +53,7 @@ val TOKEN_TYPES_BEFORE_SIGNS =
     listOf(TokenType.L_PARENTHESIS, TokenType.EXPONENT, TokenType.MULTIPLICATION, TokenType.DIVISION)
 
 /**
- * the token types that creates Nodes the work with signs
+ * the token types that creates Nodes the work with signs - +
  */
 val TOKENS_WITH_SIGNS = listOf(
     TokenType.NUMBER, TokenType.L_PARENTHESIS, TokenType.SQUARE_ROOT, TokenType.SIN, TokenType.COS,

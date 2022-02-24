@@ -70,7 +70,7 @@ class Parser {
                 TokenType.SUBTRACT -> {
                     val beforeValue = newTree.last()
                     val nextValue = iterator.next()
-                    val node = SubtractNode(beforeValue as Node, nextValue as Node)
+                    val node = SubtractionNode(beforeValue as Node, nextValue as Node)
                     newTree.remove(beforeValue)
                     newTree.add(node)
                 }
