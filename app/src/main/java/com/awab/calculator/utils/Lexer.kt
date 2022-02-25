@@ -196,7 +196,7 @@ class Lexer {
                     //  if it's a number token the value of the number will multiply by the sign and saved
                     //  this the next token after the sign
                     //  the sign will not be saved
-                    //  "* - 1" will be "* token(-1)"
+                    //  "*- 1" will be "* token(-1)"
                     if (currentToken.tokenType in TOKENS_WITH_SIGNS) {
                         newTokens.add(Token(currentToken.tokenType, currentToken.value, sign = tokenSign))
                         if (!gotToNext())

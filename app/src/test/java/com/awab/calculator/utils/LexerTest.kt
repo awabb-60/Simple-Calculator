@@ -138,7 +138,6 @@ class LexerTest {
             Token(TokenType.L_PARENTHESIS)
         )
         val result = tokens == answer
-
         assert(result)
     }
 
@@ -151,8 +150,60 @@ class LexerTest {
             Token(TokenType.L_PARENTHESIS)
         )
         val result = tokens == answer
-
         assert(result)
     }
 
+    @Test
+    fun `test for negative sing after the start`() {
+        var result = true
+        for (back in TOKEN_TYPES_BEFORE_SIGNS) {
+            for (tokenWithSign in TOKENS_WITH_SIGNS) {
+                val text = if (tokenWithSign == TokenType.NUMBER)
+                    "${back}-1"
+                else "${back}-${tokenWithSign}"
+
+                val tokens = lexer.generateTokens(text)
+                // the list that contains the expected tokens types form the lexer
+                val typeAnswer = listOf(back, tokenWithSign)
+                if (tokens.map { it.tokenType } != typeAnswer) {
+                    result = false
+                    break
+                }
+
+                // testing the signs value
+                if (tokens.last().sign != -1.0) {
+                    result = false
+                    break
+                }
+            }
+        }
+        assert(result)
+    }
+
+    @Test
+    fun `test for positive sing after the start`() {
+        var result = true
+        for (back in TOKEN_TYPES_BEFORE_SIGNS) {
+            for (tokenWithSign in TOKENS_WITH_SIGNS) {
+                val text = if (tokenWithSign == TokenType.NUMBER)
+                    "${back}+1"
+                else "${back}+${tokenWithSign}"
+
+                val tokens = lexer.generateTokens(text)
+                // the list that contains the expected tokens types form the lexer
+                val typeAnswer = listOf(back, tokenWithSign)
+                if (tokens.map { it.tokenType } != typeAnswer) {
+                    result = false
+                    break
+                }
+
+                // testing the signs value
+                if (tokens.last().sign != 1.0) {
+                    result = false
+                    break
+                }
+            }
+        }
+        assert(result)
+    }
 }
