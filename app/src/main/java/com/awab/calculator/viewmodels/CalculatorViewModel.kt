@@ -132,6 +132,7 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
     fun clearAll() {
         _equationText.value = ""
         _answerText.value = ""
+        _cursorPosition.value = 0
     }
 
     /**
