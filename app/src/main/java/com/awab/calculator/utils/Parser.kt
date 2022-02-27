@@ -47,85 +47,88 @@ class Parser {
     private fun makeNodesFor(vararg targetedTokenTypes: TokenType): ArrayList<Any> {
         val iterator = tree.iterator()
         val newTree = ArrayList<Any>()
-        var currentValue = iterator.next()
-        while (true) {
+        var currentValue = Any()
+
+        fun goToNext(): Boolean {
+            return if (iterator.hasNext()) {
+                currentValue = iterator.next()
+                true
+            } else
+                false
+        }
+
+        while (goToNext()) {
             //  the number Nodes and the un targeted token types will get skipped
-            if (currentValue !is Token || currentValue.tokenType !in targetedTokenTypes) {
+            if (currentValue is Token && (currentValue as Token).tokenType in targetedTokenTypes) {
+
+                with(currentValue as Token) {
+                    //  making nodes for the targeted tokens
+                    when (this.tokenType) {
+                        TokenType.ADDITION -> {
+                            val beforeValue = newTree.last()
+                            val nextValue = iterator.next()
+                            val node = AdditionNode(beforeValue as Node, nextValue as Node)
+                            newTree.remove(beforeValue)
+                            newTree.add(node)
+                        }
+                        TokenType.SUBTRACT -> {
+                            val beforeValue = newTree.last()
+                            val nextValue = iterator.next()
+                            val node = SubtractionNode(beforeValue as Node, nextValue as Node)
+                            newTree.remove(beforeValue)
+                            newTree.add(node)
+                        }
+                        TokenType.EXPONENT -> {
+                            val beforeValue = newTree.last()
+                            val nextValue = iterator.next()
+                            val node = ExponentNode(beforeValue as Node, nextValue as Node)
+                            newTree.remove(beforeValue)
+                            newTree.add(node)
+                        }
+                        TokenType.MULTIPLICATION -> {
+                            val beforeValue = newTree.last()
+                            val nextValue = iterator.next()
+                            val node = MultiplicationNode(beforeValue as Node, nextValue as Node)
+                            newTree.remove(beforeValue)
+                            newTree.add(node)
+                        }
+                        TokenType.DIVISION -> {
+                            val beforeValue = newTree.last()
+                            val nextValue = iterator.next()
+                            val node = DivisionNode(beforeValue as Node, nextValue as Node)
+                            newTree.remove(beforeValue)
+                            newTree.add(node)
+                        }
+                        TokenType.SQUARE_ROOT -> {
+                            val nextValue = iterator.next()
+                            val node = SquareRootNode(nextValue as Node, this.sign)
+                            newTree.add(node)
+                        }
+                        TokenType.SIN -> {
+                            val nextValue = iterator.next()
+                            val node = SinNode(nextValue as Node, this.sign)
+                            newTree.add(node)
+                        }
+                        TokenType.COS -> {
+                            val nextValue = iterator.next()
+                            val node = CosNode(nextValue as Node, this.sign)
+                            newTree.add(node)
+                        }
+                        TokenType.TAN -> {
+                            val nextValue = iterator.next()
+                            val node = TanNode(nextValue as Node, this.sign)
+                            newTree.add(node)
+                        }
+                        TokenType.LN -> {
+                            val nextValue = iterator.next()
+                            val node = LnNode(nextValue as Node, this.sign)
+                            newTree.add(node)
+                        }
+                        else -> { }
+                    }
+                }
+            } else
                 newTree.add(currentValue)
-                if (iterator.hasNext()) {
-                    currentValue = iterator.next()
-                    continue
-                } else
-                    break
-            }
-            //  making nodes for the targeted tokens
-            when (currentValue.tokenType) {
-                TokenType.ADDITION -> {
-                    val beforeValue = newTree.last()
-                    val nextValue = iterator.next()
-                    val node = AdditionNode(beforeValue as Node, nextValue as Node)
-                    newTree.remove(beforeValue)
-                    newTree.add(node)
-                }
-                TokenType.SUBTRACT -> {
-                    val beforeValue = newTree.last()
-                    val nextValue = iterator.next()
-                    val node = SubtractionNode(beforeValue as Node, nextValue as Node)
-                    newTree.remove(beforeValue)
-                    newTree.add(node)
-                }
-                TokenType.EXPONENT -> {
-                    val beforeValue = newTree.last()
-                    val nextValue = iterator.next()
-                    val node = ExponentNode(beforeValue as Node, nextValue as Node)
-                    newTree.remove(beforeValue)
-                    newTree.add(node)
-                }
-                TokenType.MULTIPLICATION -> {
-                    val beforeValue = newTree.last()
-                    val nextValue = iterator.next()
-                    val node = MultiplicationNode(beforeValue as Node, nextValue as Node)
-                    newTree.remove(beforeValue)
-                    newTree.add(node)
-                }
-                TokenType.DIVISION -> {
-                    val beforeValue = newTree.last()
-                    val nextValue = iterator.next()
-                    val node = DivisionNode(beforeValue as Node, nextValue as Node)
-                    newTree.remove(beforeValue)
-                    newTree.add(node)
-                }
-                TokenType.SQUARE_ROOT -> {
-                    val nextValue = iterator.next()
-                    val node = SquareRootNode(nextValue as Node,currentValue.sign)
-                    newTree.add(node)
-                }
-                TokenType.SIN -> {
-                    val nextValue = iterator.next()
-                    val node = SinNode(nextValue as Node,currentValue.sign)
-                    newTree.add(node)
-                }
-                TokenType.COS -> {
-                    val nextValue = iterator.next()
-                    val node = CosNode(nextValue as Node,currentValue.sign)
-                    newTree.add(node)
-                }
-                TokenType.TAN -> {
-                    val nextValue = iterator.next()
-                    val node = TanNode(nextValue as Node,currentValue.sign)
-                    newTree.add(node)
-                }
-                TokenType.LN -> {
-                    val nextValue = iterator.next()
-                    val node = LnNode(nextValue as Node,currentValue.sign)
-                    newTree.add(node)
-                }
-                else -> {}
-            }
-            if (!iterator.hasNext()) {
-                break
-            }
-            currentValue = iterator.next()
         }
         return newTree
     }
@@ -134,15 +137,16 @@ class Parser {
      * this function take thee tree and create all the NumberNodes
      * @return a tree with NumberNodes instead of Number Token
      */
-    private fun makeNumbersNodes(tree: ArrayList<Any>): ArrayList<Any> {
+    fun makeNumbersNodes(tree: ArrayList<Any>): ArrayList<Any> {
         val newTree = ArrayList<Any>()
-            for (it in tree){
-                if (it is Token && it.tokenType == TokenType.NUMBER) {
-                    newTree.add(NumberNode(it.value * it.sign))
-                    continue
-                }
-                newTree.add(it)
+        for (it in tree) {
+            if (it is Token && it.tokenType == TokenType.NUMBER) {
+                // multiplying the sign here so the value of the number get displayed right
+                newTree.add(NumberNode(it.value * it.sign))
+                continue
             }
+            newTree.add(it)
+        }
         return newTree
     }
 
@@ -152,56 +156,59 @@ class Parser {
      * and all the tokens inside of it will get passed as parameters to the ParenthesisNode
      *
      * @return a tree with ParenthesisNode instead of the top level parenthesis
-    */
-    private fun findParenthesis(tokens: ArrayList<Token>): ArrayList<Any> {
+     */
+    fun findParenthesis(tokens: ArrayList<Token>): ArrayList<Any> {
         val newTokens = ArrayList<Any>()
         val tokenIterator = tokens.iterator()
-        var currentToken = tokenIterator.next()
 
-        while (true) {
-            if (currentToken.tokenType == TokenType.L_PARENTHESIS) {
-                //  the sign left to the parenthesis
-                val parenthesisSign = currentToken.sign
+        var currentToken = Token(TokenType.NUMBER)
+
+        fun goToNext(): Boolean {
+            return if (tokenIterator.hasNext()) {
                 currentToken = tokenIterator.next()
-                var lPCounter = 0
+                true
+            } else false
+        }
+
+        // looping throw the list of tokens
+        while (goToNext()) {
+            if (currentToken.tokenType == TokenType.L_PARENTHESIS) {
+                //  the sign of the parenthesis
+                val parenthesisSign = currentToken.sign
+
+                // the counter that will find the corresponding right parenthesis
+                // start with 1 ... the initial left parentheses
+                var leftParenthesisCounter = 1
+
+                // the tokens inside the top level parenthesis
                 val parenthesisTokens = ArrayList<Token>()
-                while (true) {
-                    // the LeftParenthesisCounter {lPCounter} will get incremented
+
+
+                while (goToNext()) {
+                    // the LeftParenthesisCounter will get incremented
                     // every time a left Parenthesis comes, and decremented every time a right parenthesis comes
-                    // so when the lPCounter == 0 that means its the closing right parenthesis in the top level
+                    // so when the LeftParenthesisCounter == 0 that means its the closing right parenthesis in the top level
+                    // if the top top parenthesis is not closed it will get ignored
                     if (currentToken.tokenType == TokenType.L_PARENTHESIS) {
-                        lPCounter++
+                        leftParenthesisCounter++
                         parenthesisTokens.add(currentToken)
                     } else if (currentToken.tokenType == TokenType.R_PARENTHESIS) {
-                        if (lPCounter > 0) {
-                            lPCounter--
+                        leftParenthesisCounter--
+                        // this right parenthesis is inside the top level parenthesis
+                        if (leftParenthesisCounter > 0) {
                             parenthesisTokens.add(currentToken)
                         }
-                        if (lPCounter == 0) {
+                        // this right parenthesis is a closer for the top level parenthesis
+                        else if (leftParenthesisCounter == 0) {
                             newTokens.add(ParenthesisNode(parenthesisTokens, parenthesisSign))
-                            if (tokenIterator.hasNext())
-                                currentToken = tokenIterator.next()
                             break
                         }
                     } else {
                         parenthesisTokens.add(currentToken)
                     }
-
-                    if (tokenIterator.hasNext())
-                        currentToken = tokenIterator.next()
-                    else
-                        break
                 }
             } else {
                 newTokens.add(currentToken)
-                if (tokenIterator.hasNext())
-                    currentToken = tokenIterator.next()
-                else {
-//                    if the last token in tokens is ")" it will get removed
-                    if (currentToken.tokenType == TokenType.R_PARENTHESIS)
-                        newTokens.removeLast()
-                    break
-                }
             }
         }
         return newTokens

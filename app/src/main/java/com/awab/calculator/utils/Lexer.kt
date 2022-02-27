@@ -138,78 +138,56 @@ class Lexer {
      */
     private fun negativePositiveTokens(tokens: MutableList<Token>): MutableList<Token> {
         val newTokens = mutableListOf<Token>()
-        val tokenIterator = tokens.iterator()
-        var currentToken = tokenIterator.next()
+        val signsPositions = getSignsPositions(tokens)
 
-        fun gotToNext(): Boolean {
-            if (tokenIterator.hasNext()) {
-                currentToken = tokenIterator.next()
-                return true
+        var addSign = false
+        var sign = 1.0
+        for (idx in tokens.indices) {
+            val token = tokens[idx]
+            // adding the saved sing
+            if (addSign) {
+                newTokens.add(Token(token.tokenType, value = token.value, sign = sign))
+                sign = 1.0
+                addSign = false
+                continue
             }
-            return false
-        }
-
-        //  handling if the subtraction and addition symbol came in the start of the equation
-        if (currentToken.tokenType in SINGS) {
-            val newNumberSign = if (currentToken.tokenType == TokenType.SUBTRACT) -1.0
-            else 1.0
-            if (!gotToNext())
-                return tokens
-            //  number after subtraction or addition symbol at the start
-            // "-1" "+1"
-            if (currentToken.tokenType in listOf(
-                    TokenType.NUMBER, TokenType.SQUARE_ROOT,
-                    TokenType.SIN, TokenType.COS, TokenType.TAN, TokenType.LN
-                )
-            ) {
-                newTokens.add(Token(currentToken.tokenType, currentToken.value, sign = newNumberSign))
-            }
-
-            // parenthesis after subtraction or addition symbol at the start
-            //  "-(" "+(" only at the first
-            //  it add the newNumberSign to the equation and multiply it by the next token
-            else if (currentToken.tokenType == TokenType.L_PARENTHESIS) {
-                newTokens.add(Token(TokenType.NUMBER, newNumberSign))
-                newTokens.add(Token(TokenType.MULTIPLICATION))
-                newTokens.add(currentToken)
-            }
-            if (!gotToNext())
-                return newTokens
-        }
-
-        // handling the rest
-        while (true) {
-            // searching for the positions when - or + will act as sign
-            if (currentToken.tokenType in TOKEN_TYPES_BEFORE_SIGNS) {
-                newTokens.add(currentToken)
-                //  save the token and then start the check
-                if (!gotToNext())
-                    break
-
-                //  check if this token can be treated as signs and if there is another token after it
-                if (currentToken.tokenType in SINGS && tokenIterator.hasNext()) {
-                    val tokenSign = if (currentToken.tokenType == TokenType.SUBTRACT) -1.0
-                    else 1.0
-
-                    // go to the token after the sign
-                    gotToNext()
-                    //  if it's a number token the value of the number will multiply by the sign and saved
-                    //  this the next token after the sign
-                    //  the sign will not be saved
-                    //  "*- 1" will be "* token(-1)"
-                    if (currentToken.tokenType in TOKENS_WITH_SIGNS) {
-                        newTokens.add(Token(currentToken.tokenType, currentToken.value, sign = tokenSign))
-                        if (!gotToNext())
-                            break
-                    }
-                }
-            } else {
-                newTokens.add(currentToken)
-                if (!gotToNext())
-                    break
-            }
+            // saving the sign value to be added to the next tokens
+            if (idx in signsPositions) {
+                sign = if (token.tokenType == TokenType.SUBTRACT) -1.0 else 1.0
+                addSign = true
+            } else // add the normal tokens
+                newTokens.add(token)
         }
         return newTokens
+    }
+
+    /**
+     * get the positions of the - and + tokens where it might act as a sign
+     * @param tokens the tokens list where you want to find the positions of the signs
+     * @return a list of signs positions
+     */
+    private fun getSignsPositions(tokens: List<Token>): MutableList<Int> {
+        val pos = mutableListOf<Int>()
+        tokens.forEachIndexed { index, token ->
+
+            // only adding the
+            if (token.tokenType in SIGNS && index != tokens.lastIndex) {
+                // at the start
+                if (index == 0) {
+                    pos.add(index)
+                }
+
+                // the rest
+                if (index > 0) {
+                    // check if the sign in a place where it act as a sign
+                    if (tokens[index - 1].tokenType in TOKEN_TYPES_BEFORE_SIGNS &&
+                        tokens[index + 1].tokenType in TOKENS_WITH_SIGNS
+                    )
+                        pos.add(index)
+                }
+            }
+        }
+        return pos
     }
 
     /**

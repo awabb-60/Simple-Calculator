@@ -25,6 +25,7 @@ const val e_VALUE = 2.718281185
 const val LEFT_PARENTHESIS = '('
 const val RIGHT_PARENTHESIS = ')'
 
+const val EMPTY_ERROR = "it empty!"
 const val SYNTAX_ERROR = "syntax error!"
 const val DIVISION_ERROR = "cannot divide by zero!"
 const val MATH_ERROR = "Math error!"
@@ -40,9 +41,9 @@ val ORDER_OF_OPERATIONS = arrayOf(
 )
 
 /**
- * the negative and the positive sign... the
+ * the negative and the positive signs... -+
  */
-val SINGS = listOf(TokenType.SUBTRACT, TokenType.ADDITION)
+val SIGNS = listOf(TokenType.SUBTRACT, TokenType.ADDITION)
 
 /**
  * if any subtraction or addition
@@ -71,13 +72,29 @@ val SYMBOLS = arrayOf(
 /**
  * this has all the symbols that must chang any symbol before it when it get placed
  */
-val symbolsWillChangeAnyBeforeIt = arrayOf(EXPONENT_SYMBOL, MULTIPLICATION_SYMBOL, DIVISION_SYMBOL)
+val operationsWillAnyBefore = arrayOf(EXPONENT_SYMBOL, MULTIPLICATION_SYMBOL, DIVISION_SYMBOL)
 
 /**
  * this has the symbols that must have a multiplication symbol before it in some cases when get placed
  */
 val autoPlaceMultiplicationBefore =
     arrayOf(LEFT_PARENTHESIS, SQUARE_ROOT_SYMBOL, SIN_SYMBOL, COS_SYMBOL, TAN_SYMBOL, LN_SYMBOL)
+
+/**
+ * this contains all the possible tokens that can come before a numbe token
+ */
+val TOKENS_BEFORE_NUMBERS = arrayOf(
+    TokenType.ADDITION, TokenType.SUBTRACT, TokenType.MULTIPLICATION,
+    TokenType.DIVISION, TokenType.EXPONENT, TokenType.L_PARENTHESIS
+)
+
+/**
+ * this contains all the possible tokens that can come before a numbe token
+ */
+val TOKENS_AFTER_NUMBERS = arrayOf(
+    TokenType.ADDITION, TokenType.SUBTRACT, TokenType.MULTIPLICATION,
+    TokenType.DIVISION, TokenType.EXPONENT, TokenType.R_PARENTHESIS
+)
 
 /**
  * the cursor must always be after one of these
