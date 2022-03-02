@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.text.InputType
+import android.view.GestureDetector
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -37,8 +39,6 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
         etType = binding.etType
         tvAnswer = binding.tvAnswer
 
-        disableTheInputMethod()
-
         //  translation the fragment off the screen at the start
         val screenWidth = windowManager.defaultDisplay.width
         binding.historyFragment.translationX = -screenWidth.toFloat()
@@ -58,18 +58,29 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
                 typeAnswer()
         }
         //  putting the observers to update the views
-        viewModel.equationText.observe(this, { t ->
+        viewModel.equationText.observe(this, { text ->
             etType.editableText.clear()
-            etType.editableText.append(t)
+            etType.editableText.append(text)
         })
         viewModel.cursorPosition.observe(this, { pos ->
             etType.setSelection(pos)
         })
-        viewModel.answerText.observe(this, { t ->
-            binding.tvAnswer.text = t
+        viewModel.answerText.observe(this, { answer ->
+            binding.tvAnswer.text = answer
         })
 
-        binding.ivChangeThemeColor?.setOnClickListener {
+        etType.inputType = InputType.TYPE_NULL
+        etType.setRawInputType(InputType.TYPE_CLASS_TEXT)
+        etType.setTextIsSelectable(true)
+
+        etType.setOnClickListener {
+            // no need to refactor at the start
+            if (etType.selectionStart > 0)
+                viewModel.refactorCursorPosition(etType.selectionStart - 1)
+        }
+
+
+        binding.ivChangeThemeColor.setOnClickListener {
             val dialogBinding = PickThemeColorLayoutBinding.inflate(layoutInflater)
             val dialog = AlertDialog.Builder(this).setView(dialogBinding.root)
                 .create()
@@ -140,17 +151,6 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
             true
         } else
             false
-    }
-
-    private fun disableTheInputMethod() {
-        // remove the input method when clicked
-        etType.setOnClickListener {
-            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(etType.windowToken, 0)
-            // no need to refactor at the start
-            if (etType.selectionStart > 0)
-                viewModel.refactorCursorPosition(etType.selectionStart - 1)
-        }
     }
 
     override fun onBackPressed() {
@@ -229,7 +229,7 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
         when (v.id) {
             R.id.clearAll -> clearAll()
             R.id.equals -> equals()
-            else -> viewModel.buttonClicked(v.id, etType.selectionStart)
+            else -> viewModel.buttonClicked(v.id, etType.selectionStart, etType.selectionEnd)
         }
     }
 

@@ -181,9 +181,15 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
      * all the keyPad buttons will trigger this function
      * @param id the id of the button
      */
-    fun buttonClicked(id: Int, cursorPos: Int) {
+    fun buttonClicked(id: Int, cursorStartPos: Int, cursorEndPos: Int) {
+//        the selection has arange
+        if (cursorEndPos != cursorStartPos){
+            _equationText.value = _equationText.value?.removeRange(cursorStartPos, cursorEndPos)
+            if(id == R.id.backSpace)
+                return
+        }
         // so all the type functions calls us it
-        currentCursorPos = cursorPos
+        currentCursorPos = cursorStartPos
         when (id) {
             R.id.decimalPoint -> {
                 type('.')

@@ -13,7 +13,7 @@
             android:name=".view.TestActivity2"
             android:exported="true" />
         <activity
-            android:windowSoftInputMode="stateAlwaysHidden"
+            android:windowSoftInputMode="stateHidden"
             android:name=".view.MainActivity"
             android:exported="true">
             <intent-filter>
