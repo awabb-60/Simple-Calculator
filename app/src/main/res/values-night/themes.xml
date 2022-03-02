@@ -1,19 +1,61 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Calculator" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.Calculator" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/light_blue</item>
-        <item name="colorPrimaryVariant">@color/darker_light_blue</item>
-        <item name="colorOnPrimary">@color/gray_blue</item>
+        <item name="colorPrimary">@color/gray</item>
+        <item name="colorPrimaryVariant">@color/theme_color_0</item>
+        <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/white</item>
-        <item name="colorSecondaryVariant">@color/white</item>
+        <item name="colorSecondary">@color/theme_color_0</item>
+        <item name="colorSecondaryVariant">@color/black</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/black</item>
         <!-- Customize your theme here. -->
+
+        <!-- the main theme color-->
+        <item name="theme_color">@color/theme_color_0</item>
     </style>
 
+    <style name="theme1">
+        <item name="colorSecondary">@color/theme_color_1</item>
+        <item name="theme_color">@color/theme_color_1</item>
+    </style>
+
+    <style name="theme2">
+        <item name="colorSecondary">@color/theme_color_2</item>
+        <item name="theme_color">@color/theme_color_2</item>
+    </style>
+
+    <style name="theme3">
+        <item name="colorSecondary">@color/theme_color_3</item>
+        <item name="theme_color">@color/theme_color_3</item>
+    </style>
+
+    <style name="theme4">
+        <item name="colorSecondary">@color/theme_color_4</item>
+        <item name="theme_color">@color/theme_color_4</item>
+    </style>
+
+    <style name="theme5">
+        <item name="colorSecondary">@color/theme_color_5</item>
+        <item name="theme_color">@color/theme_color_5</item>
+    </style>
+
+    <style name="theme6">
+        <item name="colorSecondary">@color/theme_color_6</item>
+        <item name="theme_color">@color/theme_color_6</item>
+    </style>
+
+    <style name="theme7">
+        <item name="colorSecondary">@color/theme_color_7</item>
+        <item name="theme_color">@color/theme_color_7</item>
+    </style>
+
+    <style name="theme8">
+        <item name="colorSecondary">@color/theme_color_8</item>
+        <item name="theme_color">@color/theme_color_8</item>
+    </style>
 
     <style name="typeLayout">
         <item name="singleLine">true</item>
@@ -47,6 +89,24 @@
         <item name="button_text_padding">@dimen/landScapeButtonTextPadding</item>
     </style>
 
+    <!--    Equals button-->
+    <style name="EqualButtonStyle" parent="KeyPadButton">
+        <item name="button_text_size">@dimen/ButtonTextSize</item>
+        <item name="button_text_padding">@dimen/ButtonTextPadding</item>
+        <item name="button_text_color">@color/black</item>
+        <item name="button_background">?attr/theme_color</item>
+        <item name="button_text">@string/equals</item>
+    </style>
+
+    <!--   landscape Equals button-->
+    <style name="LandScapeEqualButtonStyle" parent="KeyPadButton">
+        <item name="button_text_size">@dimen/landScapeButtonTextSize</item>
+        <item name="button_text_padding">@dimen/landScapeButtonTextPadding</item>
+        <item name="button_text_color">@color/black</item>
+        <item name="button_background">?attr/theme_color</item>
+        <item name="button_text">@string/equals</item>
+    </style>
+
     <!--    the backspace button-->
     <style name="BackSpaceButton" parent="KeyPadButton">
         <item name="android:src">@drawable/ic_backspace</item>
@@ -55,7 +115,8 @@
         <item name="android:scaleType">center</item>
     </style>
 
-    <style name="ButtonsTableRow">
-        <item name="android:color">@color/darker_light_blue</item>
+    <style name="tableRow">
+        <item name="android:background">@color/black</item>
     </style>
+
 </resources>

@@ -30,7 +30,7 @@
             android:layout_margin="3dp"
             android:gravity="end"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColor="@color/darker_light_blue"
+            android:textColor="?attr/theme_color"
             tools:text="3.0" />
 
     </LinearLayout>

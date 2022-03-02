@@ -40,4 +40,7 @@
     <string name="backspace_description">backspace button</string>
     <string name="clear">clear</string>
     <string name="no_history">no history</string>
+    <string name="parenthesis">( )</string>
+    <string name="choose_color">Choose Color</string>
+    <string name="pick_new_theme_color_button_icon">pick new theme color button icon</string>
 </resources>

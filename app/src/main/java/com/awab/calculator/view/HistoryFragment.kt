@@ -92,5 +92,6 @@ class HistoryFragment : Fragment(), HistoryAdapter.HistoryClickListener {
          * this function will take put the history item data to the views with animations
          */
         fun typeHistoryItem(equation:String, answer:String)
+
     }
 }

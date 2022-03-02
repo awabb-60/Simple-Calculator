@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.awab.calculator"
-        minSdk 14
+        minSdk 16
         targetSdk 31
         versionCode 1
         versionName "2.0"

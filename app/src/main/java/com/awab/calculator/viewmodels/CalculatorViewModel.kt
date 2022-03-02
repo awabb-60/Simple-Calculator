@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.awab.calculator.R
-import com.awab.calculator.data.HistoryItem
+import com.awab.calculator.data.data_models.HistoryItem
 import com.awab.calculator.data.Repository
 import com.awab.calculator.utils.*
 import kotlinx.coroutines.Dispatchers
@@ -254,11 +254,8 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
             R.id.ln -> {
                 typeEndWithParenthesis(TokenType.LN.toString())
             }
-            R.id.lParenthesis -> {
-                type(LEFT_PARENTHESIS)
-            }
-            R.id.rParenthesis -> {
-                type(RIGHT_PARENTHESIS)
+            R.id.parenthesis -> {
+                typeParenthesis()
             }
             R.id.negativeP -> {
                 typeNegativeParenthesis()
@@ -325,6 +322,12 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
         type(RIGHT_PARENTHESIS)
     }
 
+    private fun typeParenthesis() {
+        if (calculator.filterInput(_equationText.value!!, ')') == _equationText.value + ')')
+            type(')')
+        else
+            type('(')
+    }
     /**
      * open parenthesis with a negative at the start, (-
      */

@@ -2,17 +2,77 @@
     <!-- Base application theme. -->
     <style name="Theme.Calculator" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/light_blue</item>
-        <item name="colorPrimaryVariant">@color/darker_light_blue</item>
-        <item name="colorOnPrimary">@color/gray_blue</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/darker_light_blue</item>
-        <item name="colorSecondaryVariant">@color/white</item>
-        <item name="colorOnSecondary">@color/white</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/gray</item>
+        <item name="colorPrimaryVariant">@color/theme_color_0</item>
+        <item name="colorOnPrimary">@color/black</item>
 
+        <!-- Secondary brand color. -->
+        <!-- the color of the cursor in edit text-->
+        <item name="colorSecondary">@color/theme_color_0</item>
+        <item name="colorSecondaryVariant">@color/black</item>
+        <item name="colorOnSecondary">@color/black</item>
+
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">@color/theme_color_0</item>
+
+        <!-- the main theme color-->
+        <item name="theme_color">@color/theme_color_0</item>
+    </style>
+
+    <style name="theme1">
+        <item name="colorSecondary">@color/theme_color_1</item>
+        <item name="theme_color">@color/theme_color_1</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/theme_color_1</item>
+    </style>
+
+    <style name="theme2">
+        <item name="colorSecondary">@color/theme_color_2</item>
+        <item name="theme_color">@color/theme_color_2</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/theme_color_2</item>
+
+    </style>
+
+    <style name="theme3">
+        <item name="colorSecondary">@color/theme_color_3</item>
+        <item name="theme_color">@color/theme_color_3</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/theme_color_3</item>
+
+    </style>
+
+
+    <style name="theme4">
+        <item name="colorSecondary">@color/theme_color_4</item>
+        <item name="theme_color">@color/theme_color_4</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/theme_color_4</item>
+
+    </style>
+
+    <style name="theme5">
+        <item name="colorSecondary">@color/theme_color_5</item>
+        <item name="theme_color">@color/theme_color_5</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/theme_color_5</item>
+
+    </style>
+
+
+    <style name="theme6">
+        <item name="colorSecondary">@color/theme_color_6</item>
+        <item name="theme_color">@color/theme_color_6</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/theme_color_6</item>
+
+    </style>
+
+    <style name="theme7">
+        <item name="colorSecondary">@color/theme_color_7</item>
+        <item name="theme_color">@color/theme_color_7</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/theme_color_7</item>
+
+    </style>
+
+    <style name="theme8">
+        <item name="colorSecondary">@color/theme_color_8</item>
+        <item name="theme_color">@color/theme_color_8</item>
+        <item name="android:statusBarColor" tools:targetApi="l">@color/theme_color_8</item>
     </style>
 
     <style name="typeLayout">
@@ -47,12 +107,34 @@
         <item name="button_text_padding">@dimen/landScapeButtonTextPadding</item>
     </style>
 
+    <!--    Equals button-->
+    <style name="EqualButtonStyle" parent="KeyPadButton">
+        <item name="button_text_size">@dimen/ButtonTextSize</item>
+        <item name="button_text_padding">@dimen/ButtonTextPadding</item>
+        <item name="button_text_color">@color/white</item>
+        <item name="button_background">?attr/theme_color</item>
+        <item name="button_text">@string/equals</item>
+    </style>
+
+    <!--   landscape Equals button-->
+    <style name="LandScapeEqualButtonStyle" parent="KeyPadButton">
+        <item name="button_text_size">@dimen/landScapeButtonTextSize</item>
+        <item name="button_text_padding">@dimen/landScapeButtonTextPadding</item>
+        <item name="button_text_color">@color/white</item>
+        <item name="button_background">?attr/theme_color</item>
+        <item name="button_text">@string/equals</item>
+    </style>
+
 <!--    the backspace button-->
     <style name="BackSpaceButton" parent="KeyPadButton">
         <item name="android:src">@drawable/ic_backspace</item>
         <item name="android:background">@drawable/backspace_button_background</item>
         <item name="contentDescription">@string/backspace</item>
         <item name="android:scaleType">center</item>
+    </style>
+
+    <style name="tableRow">
+        <item name="android:background">@color/white</item>
     </style>
 
 </resources>

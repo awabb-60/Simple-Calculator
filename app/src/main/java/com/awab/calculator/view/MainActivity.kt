@@ -1,19 +1,26 @@
 package com.awab.calculator.view
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
 import com.awab.calculator.R
+import com.awab.calculator.data.data_models.ThemeColor
 import com.awab.calculator.databinding.ActivityMainBinding
+import com.awab.calculator.databinding.PickThemeColorLayoutBinding
+import com.awab.calculator.other.ThemeColorAdapter
 import com.awab.calculator.viewmodels.CalculatorViewModel
 
-// infinity
-// see -0
 class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
 
     private lateinit var viewModel: CalculatorViewModel
@@ -24,9 +31,9 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setCurrentThemeColor()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         etType = binding.etType
         tvAnswer = binding.tvAnswer
 
@@ -40,9 +47,6 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
         binding.tvHistory.setOnClickListener {
             openCloseHistoryFragment()
         }
-
-        // start the calculations
-        binding.btnEquals.setOnClickListener { equals() }
 
         viewModel = ViewModelProvider(this)[CalculatorViewModel::class.java]
         etType.setText(viewModel.equationText.value)
@@ -61,10 +65,81 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
         viewModel.cursorPosition.observe(this, { pos ->
             etType.setSelection(pos)
         })
-
         viewModel.answerText.observe(this, { t ->
             binding.tvAnswer.text = t
         })
+
+        binding.ivChangeThemeColor?.setOnClickListener {
+            val dialogBinding = PickThemeColorLayoutBinding.inflate(layoutInflater)
+            val dialog = AlertDialog.Builder(this).setView(dialogBinding.root)
+                .create()
+
+            val availableThemeColors = listOf(
+                ThemeColor(0, ContextCompat.getColor(this@MainActivity, R.color.theme_color_0)),
+                ThemeColor(1, ContextCompat.getColor(this@MainActivity, R.color.theme_color_1)),
+                ThemeColor(2, ContextCompat.getColor(this@MainActivity, R.color.theme_color_2)),
+                ThemeColor(3, ContextCompat.getColor(this@MainActivity, R.color.theme_color_3)),
+                ThemeColor(4, ContextCompat.getColor(this@MainActivity, R.color.theme_color_4)),
+                ThemeColor(5, ContextCompat.getColor(this@MainActivity, R.color.theme_color_5)),
+                ThemeColor(6, ContextCompat.getColor(this@MainActivity, R.color.theme_color_6)),
+                ThemeColor(7, ContextCompat.getColor(this@MainActivity, R.color.theme_color_7)),
+                ThemeColor(8, ContextCompat.getColor(this@MainActivity, R.color.theme_color_8)),
+            )
+
+            // the action after the color is clicked
+            val colorOnClick: (Int) -> Unit = { themeIndex ->
+                changeThemeColor(themeIndex)
+                dialog.cancel()
+            }
+
+            // the color list rv
+            dialogBinding.rvColors.adapter = ThemeColorAdapter(availableThemeColors, colorOnClick)
+            dialogBinding.rvColors.layoutManager = GridLayoutManager(this, 3)
+            dialogBinding.rvColors.setHasFixedSize(true)
+
+            // removing the white background
+            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.show()
+        }
+    }
+
+    private fun setCurrentThemeColor() {
+        val sp = getSharedPreferences(THEME_SHARED_PREFERENCES, MODE_PRIVATE)
+        val currentThemeColor = when (sp.getInt(CURRENT_THEME, 0)) {
+            1 -> R.style.theme1
+            2 -> R.style.theme2
+            3 -> R.style.theme3
+            4 -> R.style.theme4
+            5 -> R.style.theme5
+            6 -> R.style.theme6
+            7 -> R.style.theme7
+            8 -> R.style.theme8
+            else -> R.style.Theme_Calculator
+        }
+        setTheme(currentThemeColor)
+    }
+
+    private fun changeThemeColor(themeIndex: Int) {
+        // saving the new theme color  index
+        if(saveThemeColor(themeIndex)){
+            // refreshing the activity
+            recreate()
+        }
+    }
+
+    /**
+     * @return true if the theme index has been updated. false if the the theme index has has not been saved
+     * or the old value is the same
+     */
+    private fun saveThemeColor(themeIndex: Int): Boolean {
+        val sp = getSharedPreferences(THEME_SHARED_PREFERENCES, MODE_PRIVATE)
+        return if (sp.getInt(CURRENT_THEME, 0) != themeIndex) {
+            val spEditor = sp.edit()
+            spEditor.putInt(CURRENT_THEME, themeIndex)
+            spEditor.apply()
+            true
+        } else
+            false
     }
 
     private fun disableTheInputMethod() {
@@ -73,8 +148,8 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(etType.windowToken, 0)
             // no need to refactor at the start
-            if(etType.selectionStart > 0)
-                viewModel.refactorCursorPosition(etType.selectionStart-1)
+            if (etType.selectionStart > 0)
+                viewModel.refactorCursorPosition(etType.selectionStart - 1)
         }
     }
 
@@ -137,7 +212,8 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
         } else {
             // un show the history fragment
             binding.tvHistory.setText(R.string.history)
-            binding.historyFragment.animate().setDuration(300).translationX(-binding.historyFragment.width.toFloat())
+            binding.historyFragment.animate().setDuration(300)
+                .translationX(-binding.historyFragment.width.toFloat())
                 .start()
 
             // taking the focus form the fragment to start using the keyPad
@@ -152,13 +228,13 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
     fun buttonClicked(v: View) {
         when (v.id) {
             R.id.clearAll -> clearAll()
+            R.id.equals -> equals()
             else -> viewModel.buttonClicked(v.id, etType.selectionStart)
         }
     }
 
-    // TODO: 1/6/2022 veiled
     /**
-     * this will start making the calculations and do some animations to the type veiled
+     * this will start making the calculations and do some animations
      */
     private fun equals() {
         if (viewModel.makeCalculations(this)) {
