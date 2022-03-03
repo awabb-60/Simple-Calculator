@@ -4,13 +4,13 @@
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/gray</item>
         <item name="colorPrimaryVariant">@color/theme_color_0</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorOnPrimary">@color/gray_blue</item>
 
         <!-- Secondary brand color. -->
         <!-- the color of the cursor in edit text-->
         <item name="colorSecondary">@color/theme_color_0</item>
-        <item name="colorSecondaryVariant">@color/black</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSecondaryVariant">@color/gray_blue</item>
 
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">@color/theme_color_0</item>
@@ -137,4 +137,14 @@
         <item name="android:background">@color/white</item>
     </style>
 
+    <style name="SettingsActivity">
+        <item name="android:background">@color/gray</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="SettingsCard">
+        <item name="cardBackgroundColor">@color/white</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="cardCornerRadius">10dp</item>
+    </style>
 </resources>

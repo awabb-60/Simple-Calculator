@@ -1,26 +1,17 @@
 package com.awab.calculator.view
 
-import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
+import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
-import android.view.GestureDetector
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import com.awab.calculator.R
-import com.awab.calculator.data.data_models.ThemeColor
 import com.awab.calculator.databinding.ActivityMainBinding
-import com.awab.calculator.databinding.PickThemeColorLayoutBinding
-import com.awab.calculator.other.ThemeColorAdapter
 import com.awab.calculator.viewmodels.CalculatorViewModel
 
 class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
@@ -79,43 +70,36 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
                 viewModel.refactorCursorPosition(etType.selectionStart - 1)
         }
 
-
-        binding.ivChangeThemeColor.setOnClickListener {
-            val dialogBinding = PickThemeColorLayoutBinding.inflate(layoutInflater)
-            val dialog = AlertDialog.Builder(this).setView(dialogBinding.root)
-                .create()
-
-            val availableThemeColors = listOf(
-                ThemeColor(0, ContextCompat.getColor(this@MainActivity, R.color.theme_color_0)),
-                ThemeColor(1, ContextCompat.getColor(this@MainActivity, R.color.theme_color_1)),
-                ThemeColor(2, ContextCompat.getColor(this@MainActivity, R.color.theme_color_2)),
-                ThemeColor(3, ContextCompat.getColor(this@MainActivity, R.color.theme_color_3)),
-                ThemeColor(4, ContextCompat.getColor(this@MainActivity, R.color.theme_color_4)),
-                ThemeColor(5, ContextCompat.getColor(this@MainActivity, R.color.theme_color_5)),
-                ThemeColor(6, ContextCompat.getColor(this@MainActivity, R.color.theme_color_6)),
-                ThemeColor(7, ContextCompat.getColor(this@MainActivity, R.color.theme_color_7)),
-                ThemeColor(8, ContextCompat.getColor(this@MainActivity, R.color.theme_color_8)),
-            )
-
-            // the action after the color is clicked
-            val colorOnClick: (Int) -> Unit = { themeIndex ->
-                changeThemeColor(themeIndex)
-                dialog.cancel()
-            }
-
-            // the color list rv
-            dialogBinding.rvColors.adapter = ThemeColorAdapter(availableThemeColors, colorOnClick)
-            dialogBinding.rvColors.layoutManager = GridLayoutManager(this, 3)
-            dialogBinding.rvColors.setHasFixedSize(true)
-
-            // removing the white background
-            dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            dialog.show()
+        binding.openSettings.setOnClickListener {
+            startActivityForResult(Intent(this@MainActivity, SettingsActivity::class.java), SETTINGS_REQUEST_CODE)
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+
+        if (resultCode == RESULT_OK && requestCode == SETTINGS_REQUEST_CODE){
+            binding.openSettings.postDelayed(
+                { Toast.makeText(this, "settings changed", Toast.LENGTH_SHORT).show()}, 2000)
+        }
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
+
+    private fun saveDarkModeState(enabled: Boolean) {
+        val spEditor = getSharedPreferences(THEME_SHARED_PREFERENCES, MODE_PRIVATE).edit()
+        spEditor.putBoolean(CURRENT_DARK_MODE_STATE, enabled)
+        spEditor.apply()
     }
 
     private fun setCurrentThemeColor() {
         val sp = getSharedPreferences(THEME_SHARED_PREFERENCES, MODE_PRIVATE)
+
+        val darkModeState = sp.getBoolean(CURRENT_DARK_MODE_STATE, false)
+        if (darkModeState)
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        else
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
         val currentThemeColor = when (sp.getInt(CURRENT_THEME, 0)) {
             1 -> R.style.theme1
             2 -> R.style.theme2

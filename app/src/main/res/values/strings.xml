@@ -43,4 +43,5 @@
     <string name="parenthesis">( )</string>
     <string name="choose_color">Choose Color</string>
     <string name="pick_new_theme_color_button_icon">pick new theme color button icon</string>
+    <string name="open_settings">open settings</string>
 </resources>
