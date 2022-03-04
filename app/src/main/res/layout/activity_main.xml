@@ -58,15 +58,6 @@
             android:textSize="25sp" />
 
         <ImageView
-            android:background="?attr/selectableItemBackground"
-            android:id="@+id/ivChangeThemeColor"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:contentDescription="@string/pick_new_theme_color_button_icon"
-            android:src="@drawable/ic_pick_color" />
-
-        <ImageView
             android:id="@+id/openSettings"
             android:background="?attr/selectableItemBackground"
             android:layout_width="wrap_content"

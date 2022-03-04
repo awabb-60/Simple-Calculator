@@ -1,12 +1,15 @@
 package com.awab.calculator.other
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.awab.calculator.data.data_models.ThemeColor
 import com.awab.calculator.databinding.ThemeColorBinding
 
 class ThemeColorAdapter(
+    val context:Context,
     val list: List<ThemeColor>,
     val onClick: (Int) -> Unit
 ) : RecyclerView.Adapter<ThemeColorAdapter.ViewHolder>() {
@@ -32,7 +35,7 @@ class ThemeColorAdapter(
         }
 
         fun bind(themeColor: ThemeColor) {
-            binding.color.setCardBackgroundColor(themeColor.color)
+            binding.color.setCardBackgroundColor(ContextCompat.getColor(context, themeColor.colorResId))
         }
     }
 }

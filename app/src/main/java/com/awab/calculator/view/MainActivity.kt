@@ -6,7 +6,6 @@ import android.text.InputType
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
@@ -24,9 +23,11 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setCurrentThemeColor()
+
+        setCurrentSettings()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         etType = binding.etType
         tvAnswer = binding.tvAnswer
 
@@ -76,23 +77,19 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-
-        if (resultCode == RESULT_OK && requestCode == SETTINGS_REQUEST_CODE){
+        if (resultCode == RESULT_OK && requestCode == SETTINGS_REQUEST_CODE) {
             binding.openSettings.postDelayed(
-                { Toast.makeText(this, "settings changed", Toast.LENGTH_SHORT).show()}, 2000)
+                {
+                    // refreshing the activity after the settings is changed
+                    recreate()
+                }, 1000
+            )
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-
-    private fun saveDarkModeState(enabled: Boolean) {
-        val spEditor = getSharedPreferences(THEME_SHARED_PREFERENCES, MODE_PRIVATE).edit()
-        spEditor.putBoolean(CURRENT_DARK_MODE_STATE, enabled)
-        spEditor.apply()
-    }
-
-    private fun setCurrentThemeColor() {
-        val sp = getSharedPreferences(THEME_SHARED_PREFERENCES, MODE_PRIVATE)
+    private fun setCurrentSettings() {
+        val sp = getSharedPreferences(SETTINGS_SHARED_PREFERENCES, MODE_PRIVATE)
 
         val darkModeState = sp.getBoolean(CURRENT_DARK_MODE_STATE, false)
         if (darkModeState)
@@ -100,7 +97,7 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
         else
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
-        val currentThemeColor = when (sp.getInt(CURRENT_THEME, 0)) {
+        val currentThemeColor = when (sp.getInt(CURRENT_THEME_INDEX, 0)) {
             1 -> R.style.theme1
             2 -> R.style.theme2
             3 -> R.style.theme3
@@ -112,29 +109,6 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
             else -> R.style.Theme_Calculator
         }
         setTheme(currentThemeColor)
-    }
-
-    private fun changeThemeColor(themeIndex: Int) {
-        // saving the new theme color  index
-        if(saveThemeColor(themeIndex)){
-            // refreshing the activity
-            recreate()
-        }
-    }
-
-    /**
-     * @return true if the theme index has been updated. false if the the theme index has has not been saved
-     * or the old value is the same
-     */
-    private fun saveThemeColor(themeIndex: Int): Boolean {
-        val sp = getSharedPreferences(THEME_SHARED_PREFERENCES, MODE_PRIVATE)
-        return if (sp.getInt(CURRENT_THEME, 0) != themeIndex) {
-            val spEditor = sp.edit()
-            spEditor.putInt(CURRENT_THEME, themeIndex)
-            spEditor.apply()
-            true
-        } else
-            false
     }
 
     override fun onBackPressed() {

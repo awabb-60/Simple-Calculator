@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android"
     android:dither="true">
 
-    <item android:drawable="@color/back_space_clicked_color"
+    <item android:drawable="@color/night_back_space_clicked_color"
         android:state_pressed="true"/>
 
     <item android:drawable="@color/dark_fad_gray"

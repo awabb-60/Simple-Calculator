@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/gray"
-    android:gravity="center">
+    style="@style/HistoryFragment">
 
     <TextView
         android:layout_width="wrap_content"
@@ -24,7 +23,6 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:background="@color/gray"
         tools:listitem="@layout/history_item" />
 
     <ImageButton
@@ -40,5 +38,5 @@
         android:gravity="center_horizontal"
         android:padding="10dp"
         android:src="@drawable/ic_delete"
-        />
+        android:contentDescription="@string/clear_calculation_history" />
 </RelativeLayout>

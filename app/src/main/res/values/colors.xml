@@ -12,6 +12,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="back_space_clicked_color">#EAC0C0</color>
+    <color name="night_back_space_clicked_color">#393838</color>
 
     <color name="theme_color_0">#7ED7FA</color>
     <color name="theme_color_1">#6CACF1</color>

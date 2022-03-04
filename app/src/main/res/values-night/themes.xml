@@ -3,11 +3,15 @@
     <style name="Theme.Calculator" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/gray</item>
-        <item name="colorPrimaryVariant">@color/theme_color_0</item>
+        <item name="colorPrimaryVariant">@color/gray_blue</item>
         <item name="colorOnPrimary">@color/gray_blue</item>
-        <!-- Secondary brand color. -->
+
+        <!-- the color of the cursor, switch, fab-->
         <item name="colorSecondary">@color/theme_color_0</item>
-        <item name="colorOnSecondary">@color/black</item>
+
+        <!-- fab icon color-->
+        <item name="colorOnSecondary">@color/white</item>
+
         <item name="colorSecondaryVariant">@color/gray_blue</item>
 
         <!-- Status bar color. -->
@@ -118,6 +122,10 @@
 
     <style name="tableRow">
         <item name="android:background">@color/black</item>
+    </style>
+
+    <style name="HistoryFragment">
+        <item name="android:background">@color/dark_fad_gray</item>
     </style>
 
     <style name="SettingsActivity">

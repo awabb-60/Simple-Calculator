@@ -20,16 +20,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:weightSum="3">
+            android:weightSum="3.5">
 
             <TextView
-                android:id="@+id/tvThemeTitle"
+                android:id="@+id/tvThemeSettingsTitle"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_margin="10dp"
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackground"
-                android:text="Theme"
+                android:text="@string/theme"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
             <androidx.appcompat.widget.SwitchCompat
@@ -39,21 +39,40 @@
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="?attr/selectableItemBackground"
-                android:text="dark mode" />
+                android:text="@string/dark_mode"
+                tools:checked="true" />
 
-            <TextView
-                android:id="@+id/tvThemeColor"
+            <LinearLayout
+                android:id="@+id/themeColor"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:layout_weight="1"
                 android:background="?attr/selectableItemBackground"
-                android:drawableEnd="@drawable/theme_color"
-                android:drawableRight="@color/black"
-                android:gravity="center_vertical"
-                android:text="theme color"
-                android:textAllCaps="false"
-                android:textAppearance="@style/TextAppearance.AppCompat.Widget.Switch" />
+                android:layout_weight="1.5"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_weight="1"
+                    android:id="@+id/tvThemeColorItemName"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackground"
+                    android:gravity="center_vertical|start"
+                    android:text="@string/settings_theme_color_item_title"
+                    android:textAllCaps="false"
+                    android:clickable="false"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Widget.Switch"
+                    tools:ignore="NestedWeights" />
+
+                <TextView
+                    android:clickable="false"
+                    android:id="@+id/themeColorRect"
+                    android:layout_width="30dp"
+                    android:layout_margin="5dp"
+                    android:background="?attr/theme_color"
+                    android:layout_height="30dp"
+                    android:gravity="" />
+            </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
@@ -62,8 +81,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
-        android:background="?attr/theme_color"
         android:src="@drawable/ic_save"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:contentDescription="@string/save_the_settings" />
 </androidx.constraintlayout.widget.ConstraintLayout>

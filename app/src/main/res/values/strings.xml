@@ -44,4 +44,9 @@
     <string name="choose_color">Choose Color</string>
     <string name="pick_new_theme_color_button_icon">pick new theme color button icon</string>
     <string name="open_settings">open settings</string>
+    <string name="dark_mode">dark mode</string>
+    <string name="theme">Theme</string>
+    <string name="settings_theme_color_item_title">theme color</string>
+    <string name="clear_calculation_history">clear calculation history</string>
+    <string name="save_the_settings">save the settings</string>
 </resources>
