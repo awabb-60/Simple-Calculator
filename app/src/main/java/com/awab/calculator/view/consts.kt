@@ -4,6 +4,7 @@ import com.awab.calculator.R
 import com.awab.calculator.data.data_models.ThemeColor
 
 const val SETTINGS_REQUEST_CODE = 999
+const val SETTINGS_CHANGED = "SETTINGS_CHANGED"
 
 const val SETTINGS_SHARED_PREFERENCES = "SETTINGS_SHARED_PREFERENCES"
 const val CURRENT_THEME_INDEX = "CURRENT_THEME_INDEX"

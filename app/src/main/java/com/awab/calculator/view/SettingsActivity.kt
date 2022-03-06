@@ -16,6 +16,8 @@ import com.awab.calculator.other.ThemeColorAdapter
 
 class SettingsActivity : AppCompatActivity() {
 
+    private var settingsChanged = false
+
     private var darkModeState = false
     private var themeColorIndex = 0
 
@@ -30,11 +32,13 @@ class SettingsActivity : AppCompatActivity() {
         displayTheCurrentSettings()
         setContentView(binding.root)
 
-
         binding.fabSave.setOnClickListener {
-            setResult(RESULT_OK)
+            settingsChanged = true
             saveSettings()
             Toast.makeText(this@SettingsActivity, "settings saved", Toast.LENGTH_SHORT).show()
+
+            // refreshing the activity to display the new settings changes
+            binding.fabSave.postDelayed({recreate()}, 500)
         }
 
         binding.themeColor.setOnClickListener {
@@ -44,6 +48,22 @@ class SettingsActivity : AppCompatActivity() {
         binding.darkModeSwitch.setOnCheckedChangeListener { _, isChecked ->
             darkModeState = isChecked
         }
+
+        if (savedInstanceState != null){
+            // settings the results that determine if the main activity should refresh or not
+            // getting the previous settings state
+            settingsChanged = savedInstanceState.getBoolean(SETTINGS_CHANGED)
+            setResult((if (settingsChanged)
+                RESULT_OK else
+                RESULT_CANCELED))
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        // if the settings has been saved the activity will get recreated
+        // the settings state will get saved her
+        outState.putBoolean(SETTINGS_CHANGED, settingsChanged)
     }
 
     private fun setCurrentThemeColor() {

@@ -31,11 +31,11 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
         etType = binding.etType
         tvAnswer = binding.tvAnswer
 
-        //  translation the fragment off the screen at the start
+        // translation the fragment off the screen at the start
         val screenWidth = windowManager.defaultDisplay.width
         binding.historyFragment.translationX = -screenWidth.toFloat()
 
-        //  open or close the fragment
+        // open or close the fragment
         binding.tvHistory.setOnClickListener {
             openCloseHistoryFragment()
         }
@@ -123,7 +123,7 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
     }
 
     override fun typeHistoryItem(equation: String, answer: String) {
-        //  translating the view down
+        // translating the view down
         etType.translationY = etType.height.toFloat() / 2
         etType.alpha = 0F
         tvAnswer.translationY = tvAnswer.height.toFloat()
