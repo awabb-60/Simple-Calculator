@@ -73,5 +73,4 @@ class SettingsViewModel : ViewModel() {
     fun changeDarkModeState(checked: Boolean) {
         darkModeState = checked
     }
-
 }

@@ -3,8 +3,6 @@ package com.awab.calculator.view
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -18,12 +16,8 @@ import com.awab.calculator.viewmodels.SettingsViewModel
 
 class SettingsActivity : AppCompatActivity() {
 
-    private var darkModeState = false
-    private var themeColorIndex = 0
-
     private lateinit var settingsViewModel: SettingsViewModel
     private lateinit var binding: ActivitySettingsBinding
-    private val TAG = "SettingsActivity"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -42,17 +36,16 @@ class SettingsActivity : AppCompatActivity() {
         if (savedInstanceState == null)
             setCurrentSettings()
 
-        Log.d(TAG, "onCreate: 1")
         AppCompatDelegate.setDefaultNightMode(if(settingsViewModel.darkModeState)
             AppCompatDelegate.MODE_NIGHT_YES
         else
             AppCompatDelegate.MODE_NIGHT_NO)
         setTheme(settingsViewModel.themeRes.value!!)
 
-        // inflating the layout 2
+        // inflating the layout
         binding = ActivitySettingsBinding.inflate(layoutInflater)
 
-        // this has to before inflating the layout 1
+        // this has to before inflating the layout
         // only at the start of the activity
         // after that the view will get the saved settings from the viewModel
 
@@ -63,16 +56,12 @@ class SettingsActivity : AppCompatActivity() {
                     ?: AVAILABLE_THEME_COLORS[DEFAULT_THEME_INDEX]
 
             binding.themeColorRect.setBackgroundColor(ContextCompat.getColor(this, currentTheme.colorResId))
-            Log.d(TAG, "onCreate: 4")
         })
 
-        // 3
         setContentView(binding.root)
-        Log.d(TAG, "onCreate: 2")
 
         binding.fabSave.setOnClickListener {
             settingsViewModel.savedSettings(this@SettingsActivity)
-            Toast.makeText(this@SettingsActivity, "settings saved", Toast.LENGTH_SHORT).show()
             // refreshing the activity to display the new settings changes
             binding.fabSave.postDelayed({ recreate() }, 500)
         }
@@ -85,16 +74,6 @@ class SettingsActivity : AppCompatActivity() {
         binding.darkModeSwitch.setOnCheckedChangeListener { _, isChecked ->
             settingsViewModel.changeDarkModeState(isChecked)
         }
-
-//        binding.themeColorRect.postDelayed({
-//            binding.themeColorRect.setBackgroundColor(Color.RED)
-//        },1000)
-//        binding.themeColorRect.postDelayed({
-//            binding.themeColorRect.setBackgroundColor(Color.BLUE)
-//        },2000)
-//        binding.themeColorRect.postDelayed({
-//            binding.themeColorRect.setBackgroundColor(Color.GREEN)
-//        },3000)
     }
 
     /**
