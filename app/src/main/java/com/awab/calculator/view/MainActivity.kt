@@ -23,7 +23,6 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setCurrentSettings()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)

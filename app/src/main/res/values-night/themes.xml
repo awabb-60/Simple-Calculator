@@ -128,14 +128,15 @@
         <item name="android:background">@color/dark_fad_gray</item>
     </style>
 
+    <style name="HistoryRecyclerView" parent="HistoryFragment" />
+
     <style name="SettingsActivity">
         <item name="android:orientation">vertical</item>
     </style>
 
-
     <style name="SettingsCard">
-    <item name="cardBackgroundColor">@color/dark_fad_gray</item>
-    <item name="android:layout_margin">5dp</item>
-    <item name="cardCornerRadius">10dp</item>
+        <item name="cardBackgroundColor">@color/dark_fad_gray</item>
+        <item name="android:layout_margin">5dp</item>
+        <item name="cardCornerRadius">10dp</item>
     </style>
 </resources>

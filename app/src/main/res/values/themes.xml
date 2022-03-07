@@ -88,7 +88,7 @@
     <style name="historyItemCardStyle">
         <item name="cardBackgroundColor">@color/white</item>
     </style>
-<!--    all the key will share these attributes-->
+    <!--    all the key will share these attributes-->
     <style name="KeyPadButton">
         <item name="android:onClick">buttonClicked</item>
         <item name="button_background">@color/gray</item>
@@ -96,13 +96,13 @@
         <item name="android:layout_weight">1</item>
     </style>
 
-<!--    the button for the portrait view-->
+    <!--    the button for the portrait view-->
     <style name="CustomButtonStyle" parent="KeyPadButton">
         <item name="button_text_size">@dimen/ButtonTextSize</item>
         <item name="button_text_padding">@dimen/ButtonTextPadding</item>
     </style>
 
-<!--    the button for the landscape view-->
+    <!--    the button for the landscape view-->
     <style name="LandScapeCustomButtonStyle" parent="KeyPadButton">
         <item name="button_text_size">@dimen/landScapeButtonTextSize</item>
         <item name="button_text_padding">@dimen/landScapeButtonTextPadding</item>
@@ -126,7 +126,7 @@
         <item name="button_text">@string/equals</item>
     </style>
 
-<!--    the backspace button-->
+    <!--    the backspace button-->
     <style name="BackSpaceButton" parent="KeyPadButton">
         <item name="android:src">@drawable/ic_backspace</item>
         <item name="android:background">@drawable/backspace_button_background</item>
@@ -141,6 +141,8 @@
     <style name="HistoryFragment">
         <item name="android:background">@color/gray</item>
     </style>
+
+    <style name="HistoryRecyclerView" parent="HistoryFragment" />
 
     <style name="SettingsActivity">
         <item name="android:background">@color/gray</item>

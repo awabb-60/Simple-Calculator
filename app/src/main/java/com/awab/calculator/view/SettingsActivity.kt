@@ -3,90 +3,109 @@ package com.awab.calculator.view
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
-import com.awab.calculator.R
 import com.awab.calculator.databinding.ActivitySettingsBinding
 import com.awab.calculator.databinding.PickThemeColorLayoutBinding
 import com.awab.calculator.other.ThemeColorAdapter
+import com.awab.calculator.viewmodels.SettingsViewModel
 
 class SettingsActivity : AppCompatActivity() {
-
-    private var settingsChanged = false
 
     private var darkModeState = false
     private var themeColorIndex = 0
 
+    private lateinit var settingsViewModel: SettingsViewModel
     private lateinit var binding: ActivitySettingsBinding
-
+    private val TAG = "SettingsActivity"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // this has to before inflating the layout
-        setCurrentThemeColor()
+
+        settingsViewModel = ViewModelProvider(this)[SettingsViewModel::class.java]
+
+        settingsViewModel.settingsChanged.observe(this, { settingsChanged ->
+            setResult(
+                if (settingsChanged)
+                    RESULT_OK
+                else RESULT_CANCELED
+            )
+        })
+
+
+
+        if (savedInstanceState == null)
+            setCurrentSettings()
+
+        Log.d(TAG, "onCreate: 1")
+        AppCompatDelegate.setDefaultNightMode(if(settingsViewModel.darkModeState)
+            AppCompatDelegate.MODE_NIGHT_YES
+        else
+            AppCompatDelegate.MODE_NIGHT_NO)
+        setTheme(settingsViewModel.themeRes.value!!)
+
+        // inflating the layout 2
         binding = ActivitySettingsBinding.inflate(layoutInflater)
 
-        displayTheCurrentSettings()
+        // this has to before inflating the layout 1
+        // only at the start of the activity
+        // after that the view will get the saved settings from the viewModel
+
+        // display the settings
+        settingsViewModel.themeColorIndex.observe(this, { index ->
+            val currentTheme =
+                AVAILABLE_THEME_COLORS.find { it.themeIndex == index }
+                    ?: AVAILABLE_THEME_COLORS[DEFAULT_THEME_INDEX]
+
+            binding.themeColorRect.setBackgroundColor(ContextCompat.getColor(this, currentTheme.colorResId))
+            Log.d(TAG, "onCreate: 4")
+        })
+
+        // 3
         setContentView(binding.root)
+        Log.d(TAG, "onCreate: 2")
 
         binding.fabSave.setOnClickListener {
-            settingsChanged = true
-            saveSettings()
+            settingsViewModel.savedSettings(this@SettingsActivity)
             Toast.makeText(this@SettingsActivity, "settings saved", Toast.LENGTH_SHORT).show()
-
             // refreshing the activity to display the new settings changes
-            binding.fabSave.postDelayed({recreate()}, 500)
+            binding.fabSave.postDelayed({ recreate() }, 500)
         }
 
         binding.themeColor.setOnClickListener {
             openThemeColorDialog()
         }
 
+        binding.darkModeSwitch.isChecked = settingsViewModel.darkModeState
         binding.darkModeSwitch.setOnCheckedChangeListener { _, isChecked ->
-            darkModeState = isChecked
+            settingsViewModel.changeDarkModeState(isChecked)
         }
 
-        if (savedInstanceState != null){
-            // settings the results that determine if the main activity should refresh or not
-            // getting the previous settings state
-            settingsChanged = savedInstanceState.getBoolean(SETTINGS_CHANGED)
-            setResult((if (settingsChanged)
-                RESULT_OK else
-                RESULT_CANCELED))
-        }
+//        binding.themeColorRect.postDelayed({
+//            binding.themeColorRect.setBackgroundColor(Color.RED)
+//        },1000)
+//        binding.themeColorRect.postDelayed({
+//            binding.themeColorRect.setBackgroundColor(Color.BLUE)
+//        },2000)
+//        binding.themeColorRect.postDelayed({
+//            binding.themeColorRect.setBackgroundColor(Color.GREEN)
+//        },3000)
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        // if the settings has been saved the activity will get recreated
-        // the settings state will get saved her
-        outState.putBoolean(SETTINGS_CHANGED, settingsChanged)
-    }
+    /**
+     * this function load the saved settings and display them on the screen
+     */
+    private fun setCurrentSettings() {
+        // setting the dark mode state
+        settingsViewModel.setCurrentDarkModeState(this)
 
-    private fun setCurrentThemeColor() {
-        val sp = getSharedPreferences(SETTINGS_SHARED_PREFERENCES, MODE_PRIVATE)
-
-        val darkModeState = sp.getBoolean(CURRENT_DARK_MODE_STATE, false)
-        if (darkModeState)
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        else
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-
-        val currentThemeColor = when (sp.getInt(CURRENT_THEME_INDEX, 0)) {
-            1 -> R.style.theme1
-            2 -> R.style.theme2
-            3 -> R.style.theme3
-            4 -> R.style.theme4
-            5 -> R.style.theme5
-            6 -> R.style.theme6
-            7 -> R.style.theme7
-            8 -> R.style.theme8
-            else -> R.style.Theme_Calculator
-        }
-        setTheme(currentThemeColor)
+        // setting the theme
+        settingsViewModel.setCurrentTheme(this)
     }
 
     private fun openThemeColorDialog() {
@@ -95,42 +114,19 @@ class SettingsActivity : AppCompatActivity() {
             .create()
 
         // the action after the color is clicked
-        val colorOnClick: (Int) -> Unit = { themeIndex ->
-            themeColorIndex = themeIndex
-            val newTheme =
-                AVAILABLE_THEME_COLORS.find { it.themeIndex == themeIndex }
-                    ?: AVAILABLE_THEME_COLORS[DEFAULT_THEME_INDEX]
-            binding.themeColorRect.setBackgroundColor(ContextCompat.getColor(this, newTheme.colorResId))
+        val onColorClicked: (Int) -> Unit = { themeIndex ->
+            settingsViewModel.changeThemeIndex(themeIndex)
             dialog.cancel()
         }
 
         // the color list rv
         dialogBinding.rvColors.adapter =
-            ThemeColorAdapter(this@SettingsActivity, AVAILABLE_THEME_COLORS, colorOnClick)
+            ThemeColorAdapter(this@SettingsActivity, AVAILABLE_THEME_COLORS, onColorClicked)
         dialogBinding.rvColors.layoutManager = GridLayoutManager(this, 3)
         dialogBinding.rvColors.setHasFixedSize(true)
 
         // removing the white background
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog.show()
-    }
-
-    private fun displayTheCurrentSettings() {
-        val settingsSP = getSharedPreferences(SETTINGS_SHARED_PREFERENCES, MODE_PRIVATE)
-
-        // getting and displaying the current saved state of the dark mode
-        binding.darkModeSwitch.isChecked = settingsSP.getBoolean(CURRENT_DARK_MODE_STATE, DEFAULT_DARK_MODE_STATE)
-        darkModeState = binding.darkModeSwitch.isChecked
-
-        // getting and displaying the current saved theme index color
-        val currentThemeIndex = settingsSP.getInt(CURRENT_THEME_INDEX, DEFAULT_THEME_INDEX)
-        themeColorIndex = currentThemeIndex
-    }
-
-    private fun saveSettings() {
-        val spEditor = getSharedPreferences(SETTINGS_SHARED_PREFERENCES, MODE_PRIVATE).edit()
-        spEditor.putBoolean(CURRENT_DARK_MODE_STATE, darkModeState)
-        spEditor.putInt(CURRENT_THEME_INDEX, themeColorIndex)
-        spEditor.apply()
     }
 }
