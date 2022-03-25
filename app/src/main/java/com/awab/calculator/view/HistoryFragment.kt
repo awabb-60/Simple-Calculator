@@ -14,7 +14,7 @@ import com.awab.calculator.viewmodels.CalculatorViewModel
 
 class HistoryFragment : Fragment(), HistoryAdapter.HistoryClickListener {
 
-    private lateinit var viewModel:CalculatorViewModel
+    private lateinit var calculatorViewModel:CalculatorViewModel
     private lateinit var listener:FragmentListener
     private var _binding: FragmentHistoryBinding? = null
 
@@ -36,7 +36,7 @@ class HistoryFragment : Fragment(), HistoryAdapter.HistoryClickListener {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(requireActivity())[CalculatorViewModel::class.java]
+        calculatorViewModel = ViewModelProvider(requireActivity())[CalculatorViewModel::class.java]
 
         val rv = binding.rvHistory
         val btnClear = binding.btnClearHistory
@@ -44,7 +44,7 @@ class HistoryFragment : Fragment(), HistoryAdapter.HistoryClickListener {
         //  clearing the history items database and close the fragment
         btnClear.setOnClickListener {
             listener.updateKeyPad()
-            viewModel.clearHistoryItems()
+            calculatorViewModel.clearHistoryItems()
         }
 
         val adapter = HistoryAdapter()
@@ -54,7 +54,7 @@ class HistoryFragment : Fragment(), HistoryAdapter.HistoryClickListener {
             //  to stack from the bottom
             stackFromEnd = true
         }
-        viewModel.historyItems.observe(viewLifecycleOwner,{
+        calculatorViewModel.historyItems.observe(viewLifecycleOwner,{
             adapter.submitList(it)
 
             // scrolling to the last / bottom history item

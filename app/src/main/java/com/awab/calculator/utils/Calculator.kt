@@ -1,7 +1,12 @@
 package com.awab.calculator.utils
 
-class Calculator {
+import dagger.hilt.android.scopes.ViewModelScoped
+import javax.inject.Inject
 
+@ViewModelScoped
+class Calculator
+@Inject
+constructor(){
     /**
      * this function take a list of token and check if it solvable and ready to get passed to the Parser
      */

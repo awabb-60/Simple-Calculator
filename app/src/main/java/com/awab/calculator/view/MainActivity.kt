@@ -1,5 +1,6 @@
 package com.awab.calculator.view
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
@@ -12,10 +13,12 @@ import androidx.lifecycle.ViewModelProvider
 import com.awab.calculator.R
 import com.awab.calculator.databinding.ActivityMainBinding
 import com.awab.calculator.viewmodels.CalculatorViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
 
-    private lateinit var viewModel: CalculatorViewModel
+    private lateinit var calculatorViewModel: CalculatorViewModel
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var etType: EditText
@@ -24,6 +27,11 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setCurrentSettings()
+
+
+
+        calculatorViewModel = ViewModelProvider(this)[CalculatorViewModel::class.java]
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -39,9 +47,8 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
             openCloseHistoryFragment()
         }
 
-        viewModel = ViewModelProvider(this)[CalculatorViewModel::class.java]
-        etType.setText(viewModel.equationText.value)
-        tvAnswer.text = viewModel.answerText.value
+        etType.setText(calculatorViewModel.equationText.value)
+        tvAnswer.text = calculatorViewModel.answerText.value
 
         // to put the answer text in the equation text
         tvAnswer.setOnClickListener {
@@ -49,14 +56,14 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
                 typeAnswer()
         }
         //  putting the observers to update the views
-        viewModel.equationText.observe(this, { text ->
+        calculatorViewModel.equationText.observe(this, { text ->
             etType.editableText.clear()
             etType.editableText.append(text)
         })
-        viewModel.cursorPosition.observe(this, { pos ->
+        calculatorViewModel.cursorPosition.observe(this, { pos ->
             etType.setSelection(pos)
         })
-        viewModel.answerText.observe(this, { answer ->
+        calculatorViewModel.answerText.observe(this, { answer ->
             binding.tvAnswer.text = answer
         })
 
@@ -67,7 +74,7 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
         etType.setOnClickListener {
             // no need to refactor at the start
             if (etType.selectionStart > 0)
-                viewModel.refactorCursorPosition(etType.selectionStart - 1)
+                calculatorViewModel.refactorCursorPosition(etType.selectionStart - 1)
         }
 
         binding.openSettings.setOnClickListener {
@@ -76,17 +83,10 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == RESULT_OK && requestCode == SETTINGS_REQUEST_CODE) {
-            binding.openSettings.postDelayed(
-                {
-                    // refreshing the activity after the settings is changed
-                    recreate()
-                }, 1000
-            )
-        }
         super.onActivityResult(requestCode, resultCode, data)
+        if(resultCode == Activity.RESULT_OK && requestCode == SETTINGS_REQUEST_CODE)
+            recreate()
     }
-
     private fun setCurrentSettings() {
         val sp = getSharedPreferences(SETTINGS_SHARED_PREFERENCES, MODE_PRIVATE)
 
@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
 
     override fun onBackPressed() {
         //  close the history items fragment when opened
-        if (viewModel.historyFragmentActive) {
+        if (calculatorViewModel.historyFragmentActive) {
             openCloseHistoryFragment()
         } else super.onBackPressed()
     }
@@ -128,8 +128,8 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
         tvAnswer.translationY = tvAnswer.height.toFloat()
 
         //  putting the history item data
-        viewModel.updateEquation(equation)
-        viewModel.updateAnswer(answer)
+        calculatorViewModel.updateEquation(equation)
+        calculatorViewModel.updateAnswer(answer)
 
         //  puling back the views
         etType.animate().setDuration(300).alpha(1F).translationY(0F).start()
@@ -144,11 +144,11 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
         etType.translationY = (-etType.height).toFloat()
 
         // put the answer in the type
-        viewModel.answerClicked()
+        calculatorViewModel.answerClicked()
 
         //  translating tvAnswer down and then back to it position
         tvAnswer.animate().setDuration(300).translationY(tvAnswer.height.toFloat()).start()
-        tvAnswer.postDelayed({ tvAnswer.translationY = 0F;viewModel.updateAnswer("") }, 400)
+        tvAnswer.postDelayed({ tvAnswer.translationY = 0F;calculatorViewModel.updateAnswer("") }, 400)
 
         //  pull tvType back
         etType.animate().setDuration(300).translationY(0F).start()
@@ -158,7 +158,7 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
      * open and close the history fragment with animations
      */
     private fun openCloseHistoryFragment() {
-        viewModel.historyFragmentActive = if (!viewModel.historyFragmentActive) {
+        calculatorViewModel.historyFragmentActive = if (!calculatorViewModel.historyFragmentActive) {
             // show the history fragment
             binding.tvHistory.setText(R.string.keyPad)
             binding.historyFragment.animate().setDuration(300).translationX(0F).start()
@@ -186,7 +186,7 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
         when (v.id) {
             R.id.clearAll -> clearAll()
             R.id.equals -> equals()
-            else -> viewModel.buttonClicked(v.id, etType.selectionStart, etType.selectionEnd)
+            else -> calculatorViewModel.buttonClicked(v.id, etType.selectionStart, etType.selectionEnd)
         }
     }
 
@@ -194,9 +194,9 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
      * this will start making the calculations and do some animations
      */
     private fun equals() {
-        if (viewModel.makeCalculations(this)) {
+        if (calculatorViewModel.makeCalculations(this)) {
             etType.animate().setDuration(200).alpha(0F).start()
-            etType.postDelayed({ etType.alpha = 1F;viewModel.updateEquation("") }, 300)
+            etType.postDelayed({ etType.alpha = 1F;calculatorViewModel.updateEquation("") }, 300)
         }
     }
 
@@ -207,6 +207,6 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
     private fun clearAll() {
         etType.animate().setDuration(200).alpha(0F).start()
         tvAnswer.animate().setDuration(200).alpha(0F).start()
-        etType.postDelayed({ viewModel.clearAll();etType.alpha = 1F;tvAnswer.alpha = 1F }, 300)
+        etType.postDelayed({ calculatorViewModel.clearAll();etType.alpha = 1F;tvAnswer.alpha = 1F }, 300)
     }
 }

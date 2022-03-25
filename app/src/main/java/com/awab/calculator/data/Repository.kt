@@ -4,11 +4,11 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import com.awab.calculator.data.data_models.HistoryItem
 
-class Repository(application: Application) {
+class Repository(private val historyDatabase:HistoryDateBase) {
     /**
      * the room database
      */
-    private val historyDatabase = HistoryDateBase.getInstance(application)
+//    private val historyDatabase = HistoryDateBase.getInstance(application)
 
  /**
  * the room database DAO that will handle the operation on the database

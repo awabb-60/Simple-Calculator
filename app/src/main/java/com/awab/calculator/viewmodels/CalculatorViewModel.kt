@@ -1,29 +1,26 @@
 package com.awab.calculator.viewmodels
 
-import android.app.Application
 import android.content.Context
 import android.widget.Toast
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
 import com.awab.calculator.R
 import com.awab.calculator.data.data_models.HistoryItem
 import com.awab.calculator.data.Repository
 import com.awab.calculator.utils.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 // TODO: 1/1/2022 order of operations
 
-// test  1*- null
-//9-9
-// si3n(3)
-// si-n(3)
-// -0
+@HiltViewModel
+class CalculatorViewModel
+    @Inject constructor(private val repository:Repository) : ViewModel() {
 
-class CalculatorViewModel(application: Application) : AndroidViewModel(application) {
-    private val repository = Repository(application)
+    @Inject
+    lateinit var calculator:Calculator
 
     //  the mutable values for the livedata... any edit must happen on this variables
     private val _equationText: MutableLiveData<String> = MutableLiveData<String>("")
@@ -50,7 +47,6 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
 
     val historyItems = repository.getAllHistoryItems()
 
-    private val calculator = Calculator()
     /**
      * this function will change the value of the equation text
      */
@@ -182,7 +178,7 @@ class CalculatorViewModel(application: Application) : AndroidViewModel(applicati
      * @param id the id of the button
      */
     fun buttonClicked(id: Int, cursorStartPos: Int, cursorEndPos: Int) {
-//        the selection has arange
+//        the selection has a range
         if (cursorEndPos != cursorStartPos){
             _equationText.value = _equationText.value?.removeRange(cursorStartPos, cursorEndPos)
             if(id == R.id.backSpace)

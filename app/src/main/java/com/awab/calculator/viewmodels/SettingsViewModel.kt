@@ -10,9 +10,9 @@ import com.awab.calculator.view.CURRENT_DARK_MODE_STATE
 import com.awab.calculator.view.CURRENT_THEME_INDEX
 import com.awab.calculator.view.DEFAULT_THEME_INDEX
 import com.awab.calculator.view.SETTINGS_SHARED_PREFERENCES
+import javax.inject.Inject
 
 class SettingsViewModel : ViewModel() {
-
     var darkModeState: Boolean = false
 
     private val _themeColorIndex = MutableLiveData(0)
@@ -62,7 +62,7 @@ class SettingsViewModel : ViewModel() {
             else -> R.style.Theme_Calculator
         }.let { themeIndex ->
             _themeColorIndex.value = sp.getInt(CURRENT_THEME_INDEX, DEFAULT_THEME_INDEX)
-            _themeRes.value =             themeIndex
+            _themeRes.value = themeIndex
         }
     }
 

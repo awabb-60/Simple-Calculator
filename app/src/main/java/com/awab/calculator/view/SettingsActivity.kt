@@ -13,25 +13,18 @@ import com.awab.calculator.databinding.ActivitySettingsBinding
 import com.awab.calculator.databinding.PickThemeColorLayoutBinding
 import com.awab.calculator.other.ThemeColorAdapter
 import com.awab.calculator.viewmodels.SettingsViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var settingsViewModel: SettingsViewModel
     private lateinit var binding: ActivitySettingsBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         settingsViewModel = ViewModelProvider(this)[SettingsViewModel::class.java]
-
-        settingsViewModel.settingsChanged.observe(this, { settingsChanged ->
-            setResult(
-                if (settingsChanged)
-                    RESULT_OK
-                else RESULT_CANCELED
-            )
-        })
-
-
 
         if (savedInstanceState == null)
             setCurrentSettings()
@@ -73,6 +66,15 @@ class SettingsActivity : AppCompatActivity() {
         binding.darkModeSwitch.isChecked = settingsViewModel.darkModeState
         binding.darkModeSwitch.setOnCheckedChangeListener { _, isChecked ->
             settingsViewModel.changeDarkModeState(isChecked)
+        }
+
+        settingsViewModel.settingsChanged.observe(this){
+            if (it)
+                setResult(RESULT_OK)
+            else
+                setResult(RESULT_CANCELED)
+
+
         }
     }
 
