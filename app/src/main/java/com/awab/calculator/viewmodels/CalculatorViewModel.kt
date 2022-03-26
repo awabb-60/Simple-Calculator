@@ -8,6 +8,9 @@ import com.awab.calculator.R
 import com.awab.calculator.data.data_models.HistoryItem
 import com.awab.calculator.data.Repository
 import com.awab.calculator.utils.*
+import com.awab.calculator.utils.calculator_utils.Calculator
+import com.awab.calculator.utils.calculator_utils.Lexer
+import com.awab.calculator.utils.calculator_utils.TokenType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -17,10 +20,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CalculatorViewModel
-    @Inject constructor(private val repository:Repository) : ViewModel() {
-
-    @Inject
-    lateinit var calculator:Calculator
+    @Inject constructor(private val repository:Repository, private val calculator: Calculator) : ViewModel() {
 
     //  the mutable values for the livedata... any edit must happen on this variables
     private val _equationText: MutableLiveData<String> = MutableLiveData<String>("")

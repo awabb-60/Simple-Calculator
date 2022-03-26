@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.awab.calculator.other.HistoryAdapter
+import com.awab.calculator.utils.adapters.HistoryAdapter
 import com.awab.calculator.databinding.FragmentHistoryBinding
 import com.awab.calculator.viewmodels.CalculatorViewModel
 

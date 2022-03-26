@@ -1,10 +1,10 @@
 package com.awab.calculator.data
 
-import android.app.Application
 import androidx.lifecycle.LiveData
 import com.awab.calculator.data.data_models.HistoryItem
 
-class Repository(private val historyDatabase:HistoryDateBase) {
+class Repository(historyDatabase:HistoryDataBase) {
+
     /**
      * the room database
      */

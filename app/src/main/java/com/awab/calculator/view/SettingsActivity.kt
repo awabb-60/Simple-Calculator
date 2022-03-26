@@ -3,6 +3,7 @@ package com.awab.calculator.view
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -11,9 +12,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.awab.calculator.databinding.ActivitySettingsBinding
 import com.awab.calculator.databinding.PickThemeColorLayoutBinding
-import com.awab.calculator.other.ThemeColorAdapter
+import com.awab.calculator.utils.adapters.ThemeColorAdapter
+import com.awab.calculator.utils.calculator_utils.Calculator
 import com.awab.calculator.viewmodels.SettingsViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class SettingsActivity : AppCompatActivity() {

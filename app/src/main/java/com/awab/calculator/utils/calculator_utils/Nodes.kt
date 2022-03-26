@@ -1,5 +1,7 @@
-package com.awab.calculator.utils
+package com.awab.calculator.utils.calculator_utils
 
+import com.awab.calculator.utils.DIVISION_ERROR
+import com.awab.calculator.utils.MATH_ERROR
 import java.lang.Exception
 import kotlin.math.*
 

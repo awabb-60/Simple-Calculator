@@ -1,12 +1,14 @@
-package com.awab.calculator.utils
+package com.awab.calculator.utils.calculator_utils
 
-import dagger.hilt.android.scopes.ViewModelScoped
+import com.awab.calculator.utils.*
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@ViewModelScoped
+@Singleton
 class Calculator
 @Inject
 constructor(){
+
     /**
      * this function take a list of token and check if it solvable and ready to get passed to the Parser
      */

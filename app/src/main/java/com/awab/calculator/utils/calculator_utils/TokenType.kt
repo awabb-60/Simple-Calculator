@@ -1,4 +1,6 @@
-package com.awab.calculator.utils
+package com.awab.calculator.utils.calculator_utils
+
+import com.awab.calculator.utils.*
 
 /**
  * this class hold all the possible token types that the lexer can make
@@ -14,10 +16,10 @@ enum class TokenType(private val displayString: String) {
     SQUARE_ROOT(SQUARE_ROOT_SYMBOL.toString()),
     L_PARENTHESIS(LEFT_PARENTHESIS.toString()),
     R_PARENTHESIS(RIGHT_PARENTHESIS.toString()),
-    SIN(SIN_SYMBOL+"in"),
-    COS(COS_SYMBOL+"os"),
-    TAN(TAN_SYMBOL+"an"),
-    LN(LN_SYMBOL+"n");
+    SIN(SIN_SYMBOL +"in"),
+    COS(COS_SYMBOL +"os"),
+    TAN(TAN_SYMBOL +"an"),
+    LN(LN_SYMBOL +"n");
 
     override fun toString(): String {
         return displayString

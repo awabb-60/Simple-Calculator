@@ -1,4 +1,6 @@
-package com.awab.calculator.utils
+package com.awab.calculator.utils.calculator_utils
+
+import com.awab.calculator.utils.*
 
 /**
  * the lexer create tokens from a string

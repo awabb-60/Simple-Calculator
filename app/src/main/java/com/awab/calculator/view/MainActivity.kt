@@ -111,7 +111,7 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
     }
 
     override fun onBackPressed() {
-        //  close the history items fragment when opened
+        // close the history items fragment when opened
         if (calculatorViewModel.historyFragmentActive) {
             openCloseHistoryFragment()
         } else super.onBackPressed()
@@ -127,11 +127,11 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
         etType.alpha = 0F
         tvAnswer.translationY = tvAnswer.height.toFloat()
 
-        //  putting the history item data
+        // putting the history item data
         calculatorViewModel.updateEquation(equation)
         calculatorViewModel.updateAnswer(answer)
 
-        //  puling back the views
+        // puling back the views
         etType.animate().setDuration(300).alpha(1F).translationY(0F).start()
         tvAnswer.animate().setDuration(300).translationY(0F).start()
     }
@@ -140,17 +140,17 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
      * this function will take the answer and put it in the equation text with animations
      */
     private fun typeAnswer() {
-        //  translating tvType up and off the screen then set the answer
+        // translating tvType up and off the screen then set the answer
         etType.translationY = (-etType.height).toFloat()
 
         // put the answer in the type
         calculatorViewModel.answerClicked()
 
-        //  translating tvAnswer down and then back to it position
+        // translating tvAnswer down and then back to it position
         tvAnswer.animate().setDuration(300).translationY(tvAnswer.height.toFloat()).start()
         tvAnswer.postDelayed({ tvAnswer.translationY = 0F;calculatorViewModel.updateAnswer("") }, 400)
 
-        //  pull tvType back
+        // pull tvType back
         etType.animate().setDuration(300).translationY(0F).start()
     }
 

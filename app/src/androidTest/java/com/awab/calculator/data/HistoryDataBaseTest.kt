@@ -15,14 +15,14 @@ import org.junit.runner.RunWith
 @SmallTest
 class HistoryDataBaseTest {
 
-    private lateinit var database: HistoryDateBase
+    private lateinit var database: HistoryDataBase
     private lateinit var databaseDAO: HistoryItemsDao
 
     @Before
     fun setup(){
         database = Room.inMemoryDatabaseBuilder(
             ApplicationProvider.getApplicationContext(),
-            HistoryDateBase::class.java
+            HistoryDataBase::class.java
         )
             .allowMainThreadQueries()
             .build()

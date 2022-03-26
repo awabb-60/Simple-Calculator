@@ -10,9 +10,12 @@ import com.awab.calculator.view.CURRENT_DARK_MODE_STATE
 import com.awab.calculator.view.CURRENT_THEME_INDEX
 import com.awab.calculator.view.DEFAULT_THEME_INDEX
 import com.awab.calculator.view.SETTINGS_SHARED_PREFERENCES
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-class SettingsViewModel : ViewModel() {
+@HiltViewModel
+class SettingsViewModel
+    @Inject constructor(): ViewModel() {
     var darkModeState: Boolean = false
 
     private val _themeColorIndex = MutableLiveData(0)

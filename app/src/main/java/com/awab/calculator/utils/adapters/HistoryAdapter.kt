@@ -1,4 +1,4 @@
-package com.awab.calculator.other
+package com.awab.calculator.utils.adapters
 
 import android.view.LayoutInflater
 import android.view.View
