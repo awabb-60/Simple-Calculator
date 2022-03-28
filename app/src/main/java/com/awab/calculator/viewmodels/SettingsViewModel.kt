@@ -5,72 +5,79 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.awab.calculator.R
-import com.awab.calculator.view.CURRENT_DARK_MODE_STATE
-import com.awab.calculator.view.CURRENT_THEME_INDEX
-import com.awab.calculator.view.DEFAULT_THEME_INDEX
-import com.awab.calculator.view.SETTINGS_SHARED_PREFERENCES
+import com.awab.calculator.data.data_models.ThemeModel
+import com.awab.calculator.view.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel
-    @Inject constructor(): ViewModel() {
+@Inject constructor() : ViewModel() {
     var darkModeState: Boolean = false
 
-    private val _themeColorIndex = MutableLiveData(0)
-    private val _themeRes = MutableLiveData(0)
+    // the key number for the theme
+//    private val _themeNumber = MutableLiveData(0)
 
-    private val _settingsChanged = MutableLiveData(false)
+    // the theme resources id
+    private val _theme:MutableLiveData<ThemeModel> = MutableLiveData(AVAILABLE_THEME_COLORS[DEFAULT_THEME_NUMBER])
 
-    val settingsChanged: LiveData<Boolean>
-        get() = _settingsChanged
 
-    val themeColorIndex: LiveData<Int>
-        get() = _themeColorIndex
+    val theme: LiveData<ThemeModel>
+        get() = _theme
 
-    val themeRes: LiveData<Int>
-        get() = _themeRes
+
+    private val _settingsSaved = MutableLiveData(false)
+
+    val settingsSaved: LiveData<Boolean>
+        get() = _settingsSaved
+
+//    val themeColorIndex: LiveData<Int>
+//        get() = _themeNumber
 
     fun savedSettings(context: Context) {
-        _settingsChanged.value = true
+        _settingsSaved.value = true
+
         val spEditor =
             context.getSharedPreferences(SETTINGS_SHARED_PREFERENCES, AppCompatActivity.MODE_PRIVATE).edit()
+
+        spEditor.putInt(CURRENT_THEME_NUMBER, theme.value?.themeNumber?: DEFAULT_THEME_NUMBER)
         spEditor.putBoolean(CURRENT_DARK_MODE_STATE, darkModeState)
-        spEditor.putInt(CURRENT_THEME_INDEX, _themeColorIndex.value!!)
         spEditor.apply()
-        setCurrentTheme(context)
+        setCurrentThemeInfo(context)
     }
 
     fun setCurrentDarkModeState(context: Context) {
-        val sp = context.getSharedPreferences(SETTINGS_SHARED_PREFERENCES, AppCompatActivity.MODE_PRIVATE)
-
-        // returning the theme corresponding to the saved theme index
-        darkModeState = sp.getBoolean(CURRENT_DARK_MODE_STATE, false)
-        return
+        // set the dark mode state
+        darkModeState = getSavedDarkModeState(context)
     }
 
-    fun setCurrentTheme(context: Context) {
-        val sp = context.getSharedPreferences(SETTINGS_SHARED_PREFERENCES, AppCompatActivity.MODE_PRIVATE)
-        // returning the theme corresponding to the saved theme index
-        when (sp.getInt(CURRENT_THEME_INDEX, DEFAULT_THEME_INDEX)) {
-            1 -> R.style.theme1
-            2 -> R.style.theme2
-            3 -> R.style.theme3
-            4 -> R.style.theme4
-            5 -> R.style.theme5
-            6 -> R.style.theme6
-            7 -> R.style.theme7
-            8 -> R.style.theme8
-            else -> R.style.Theme_Calculator
-        }.let { themeIndex ->
-            _themeColorIndex.value = sp.getInt(CURRENT_THEME_INDEX, DEFAULT_THEME_INDEX)
-            _themeRes.value = themeIndex
-        }
+    fun setCurrentThemeInfo(context: Context):ThemeModel {
+
+        // getting the saved theme info
+        val currentTheme:ThemeModel = getSavedTheme(context)
+
+        _theme.value = currentTheme
+        return currentTheme
     }
 
-    fun changeThemeIndex(themeIndex: Int) {
-        _themeColorIndex.value = themeIndex
+    fun getSavedDarkModeState(context: Context): Boolean {
+        val sp = context.getSharedPreferences(SETTINGS_SHARED_PREFERENCES, AppCompatActivity.MODE_PRIVATE)
+        return sp.getBoolean(CURRENT_DARK_MODE_STATE, DEFAULT_DARK_MODE_STATE)
+    }
+
+    fun getSavedTheme(context: Context):ThemeModel{
+        val sp = context.getSharedPreferences(SETTINGS_SHARED_PREFERENCES, AppCompatActivity.MODE_PRIVATE)
+
+        // getting the save theme number or the default option
+        val currentThemeNumber = sp.getInt(CURRENT_THEME_NUMBER, DEFAULT_THEME_NUMBER)
+
+        // return the saved theme
+        return AVAILABLE_THEME_COLORS.find { it.themeNumber == currentThemeNumber }
+            ?: AVAILABLE_THEME_COLORS[DEFAULT_THEME_NUMBER]
+    }
+
+    fun changeTheme(theme: ThemeModel) {
+        _theme.value = theme
     }
 
     fun changeDarkModeState(checked: Boolean) {

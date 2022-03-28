@@ -2,15 +2,18 @@ package com.awab.calculator.viewmodels
 
 import android.content.Context
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
 import androidx.lifecycle.ViewModel
 import com.awab.calculator.R
 import com.awab.calculator.data.data_models.HistoryItem
 import com.awab.calculator.data.Repository
+import com.awab.calculator.data.data_models.ThemeModel
 import com.awab.calculator.utils.*
 import com.awab.calculator.utils.calculator_utils.Calculator
 import com.awab.calculator.utils.calculator_utils.Lexer
 import com.awab.calculator.utils.calculator_utils.TokenType
+import com.awab.calculator.view.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -393,5 +396,22 @@ class CalculatorViewModel
         // because the position of the cursor is the position of the char before it
         newPosition++
        _cursorPosition.value = newPosition
+    }
+
+
+    fun getSavedDarkModeState(context: Context): Boolean {
+        val sp = context.getSharedPreferences(SETTINGS_SHARED_PREFERENCES, AppCompatActivity.MODE_PRIVATE)
+        return sp.getBoolean(CURRENT_DARK_MODE_STATE, DEFAULT_DARK_MODE_STATE)
+    }
+
+    fun getSavedTheme(context: Context): ThemeModel {
+        val sp = context.getSharedPreferences(SETTINGS_SHARED_PREFERENCES, AppCompatActivity.MODE_PRIVATE)
+
+        // getting the save theme number or the default option
+        val currentThemeNumber = sp.getInt(CURRENT_THEME_NUMBER, DEFAULT_THEME_NUMBER)
+
+        // return the saved theme
+        return AVAILABLE_THEME_COLORS.find { it.themeNumber == currentThemeNumber }
+            ?: AVAILABLE_THEME_COLORS[DEFAULT_THEME_NUMBER]
     }
 }

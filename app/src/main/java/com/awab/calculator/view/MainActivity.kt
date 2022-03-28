@@ -7,6 +7,7 @@ import android.text.InputType
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModelProvider
@@ -24,13 +25,19 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
     private lateinit var etType: EditText
     private lateinit var tvAnswer: TextView
 
+    private val settingsActivityLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result->
+            // updating the view if the settings has changed
+            if(result.resultCode == Activity.RESULT_OK)
+                recreate()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setCurrentSettings()
-
-
 
         calculatorViewModel = ViewModelProvider(this)[CalculatorViewModel::class.java]
+
+        setCurrentSettings()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -67,6 +74,7 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
             binding.tvAnswer.text = answer
         })
 
+        // to remove the input method from the screen at all time
         etType.inputType = InputType.TYPE_NULL
         etType.setRawInputType(InputType.TYPE_CLASS_TEXT)
         etType.setTextIsSelectable(true)
@@ -78,36 +86,17 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
         }
 
         binding.openSettings.setOnClickListener {
-            startActivityForResult(Intent(this@MainActivity, SettingsActivity::class.java), SETTINGS_REQUEST_CODE)
+            settingsActivityLauncher.launch(Intent(this@MainActivity, SettingsActivity::class.java))
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(resultCode == Activity.RESULT_OK && requestCode == SETTINGS_REQUEST_CODE)
-            recreate()
-    }
     private fun setCurrentSettings() {
-        val sp = getSharedPreferences(SETTINGS_SHARED_PREFERENCES, MODE_PRIVATE)
-
-        val darkModeState = sp.getBoolean(CURRENT_DARK_MODE_STATE, false)
-        if (darkModeState)
+        if (calculatorViewModel.getSavedDarkModeState(this))
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         else
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
-        val currentThemeColor = when (sp.getInt(CURRENT_THEME_INDEX, 0)) {
-            1 -> R.style.theme1
-            2 -> R.style.theme2
-            3 -> R.style.theme3
-            4 -> R.style.theme4
-            5 -> R.style.theme5
-            6 -> R.style.theme6
-            7 -> R.style.theme7
-            8 -> R.style.theme8
-            else -> R.style.Theme_Calculator
-        }
-        setTheme(currentThemeColor)
+        setTheme(calculatorViewModel.getSavedTheme(this).resId)
     }
 
     override fun onBackPressed() {

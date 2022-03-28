@@ -5,13 +5,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.awab.calculator.data.data_models.ThemeColor
+import com.awab.calculator.data.data_models.ThemeModel
 import com.awab.calculator.databinding.ThemeColorBinding
 
 class ThemeColorAdapter(
     val context:Context,
-    val list: List<ThemeColor>,
-    val onClick: (Int) -> Unit
+    val list: List<ThemeModel>,
+    val listener: ThemeColorListener
 ) : RecyclerView.Adapter<ThemeColorAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -30,12 +30,17 @@ class ThemeColorAdapter(
         init {
             binding.color.setOnClickListener {
                 if (adapterPosition != RecyclerView.NO_POSITION)
-                    onClick(list[adapterPosition].themeIndex)
+                    listener.onColorSelected(list[adapterPosition])
             }
         }
 
-        fun bind(themeColor: ThemeColor) {
-            binding.color.setCardBackgroundColor(ContextCompat.getColor(context, themeColor.colorResId))
+        fun bind(themeColor: ThemeModel) {
+            binding.color.setCardBackgroundColor(ContextCompat.getColor(context, themeColor.color))
         }
     }
+
+    interface ThemeColorListener{
+        fun onColorSelected(theme:ThemeModel)
+    }
+
 }
