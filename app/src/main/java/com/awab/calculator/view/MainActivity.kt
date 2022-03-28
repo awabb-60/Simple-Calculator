@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         calculatorViewModel = ViewModelProvider(this)[CalculatorViewModel::class.java]
 
         setCurrentSettings()

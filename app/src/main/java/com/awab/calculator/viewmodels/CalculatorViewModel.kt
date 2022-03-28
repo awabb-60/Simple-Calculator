@@ -275,6 +275,17 @@ class CalculatorViewModel
                 backSpace()
             }
         }
+
+        showAnswerPreview()
+    }
+
+    private fun showAnswerPreview() {
+        _answerText.value = try {
+            val preview = calculator.solve(_equationText.value!!)
+            preview.toBigDecimal().toString()
+        }catch (e:Exception){
+            ""
+        }
     }
 
     /**
