@@ -104,12 +104,11 @@ class CalculatorViewModel
             // when the answer is too big it will come as Infinity
             // showing a better message
             if (answer == Double.POSITIVE_INFINITY.toString()){
-                Toast.makeText(context, "the answer is too big...", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, NUMBER_TOO_BIG_ERROR, Toast.LENGTH_SHORT).show()
             }else // the normal error message
                 Toast.makeText(context, answer, Toast.LENGTH_SHORT).show()
             false
         }
-
     }
 
     /**

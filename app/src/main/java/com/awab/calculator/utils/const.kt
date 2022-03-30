@@ -27,9 +27,9 @@ const val e_VALUE = 2.718281185
 const val LEFT_PARENTHESIS = '('
 const val RIGHT_PARENTHESIS = ')'
 
-const val EMPTY_ERROR = "it empty!"
 const val SYNTAX_ERROR = "syntax error!"
 const val DIVISION_ERROR = "cannot divide by zero!"
+const val NUMBER_TOO_BIG_ERROR = "no space to display this number"
 const val MATH_ERROR = "Math error!"
 
 /**

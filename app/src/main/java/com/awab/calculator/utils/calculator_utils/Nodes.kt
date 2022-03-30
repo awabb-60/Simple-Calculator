@@ -2,6 +2,7 @@ package com.awab.calculator.utils.calculator_utils
 
 import com.awab.calculator.utils.DIVISION_ERROR
 import com.awab.calculator.utils.MATH_ERROR
+import com.awab.calculator.utils.NUMBER_TOO_BIG_ERROR
 import java.lang.Exception
 import kotlin.math.*
 
@@ -67,7 +68,15 @@ class SubtractionNode(private val node1: Node, private val node2: Node) : Node {
  */
 class ExponentNode(private val node1: Node, private val node2: Node) : Node {
 
-    override fun getValue() = node1.getValue().pow(node2.getValue())
+    override fun getValue():Double {
+        val value = node1.getValue().pow(node2.getValue())
+
+        // if the number is too big
+        if (value == Double.POSITIVE_INFINITY)
+            error(NUMBER_TOO_BIG_ERROR)
+
+        return value
+    }
 
     override fun toString(): String {
         return "(ExponentNode: $node1 ^ $node2)"
@@ -98,9 +107,9 @@ class MultiplicationNode(private val node1: Node, private val node2: Node) : Nod
 class DivisionNode(private val node1: Node, private val node2: Node) : Node {
     override fun getValue(): Double {
 //        handle division by zero
-        if (node2.getValue() == 0.0) {
+        if (node2.getValue() == 0.0)
             error(DIVISION_ERROR)
-        }
+
         return node1.getValue().div(node2.getValue())
     }
 
