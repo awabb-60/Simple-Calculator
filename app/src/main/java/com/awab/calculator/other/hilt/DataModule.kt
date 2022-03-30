@@ -2,15 +2,15 @@ package com.awab.calculator.other.hilt
 
 import android.content.Context
 import androidx.room.Room
-import com.awab.calculator.MyApplication
-import com.awab.calculator.data.HistoryDataBase
-import com.awab.calculator.data.Repository
+import com.awab.calculator.data.local.room.database.HistoryDataBase
+import com.awab.calculator.data.local.room.dao.HistoryDao
+import com.awab.calculator.data.repository.Repository
+import com.awab.calculator.data.repository.RepositoryContract
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Named
 import javax.inject.Singleton
 
 
@@ -20,15 +20,9 @@ object DataModule {
 
     @Singleton
     @Provides
-    fun provideMyApplication(@ApplicationContext context:Context):MyApplication{
-        return context as MyApplication
-    }
-
-    @Singleton
-    @Provides
-    fun provideHistoryDataBase(application: MyApplication): HistoryDataBase {
+    fun provideHistoryDataBase(@ApplicationContext context: Context): HistoryDataBase {
         return Room.databaseBuilder(
-            application.applicationContext,
+            context,
             HistoryDataBase::class.java,
             HistoryDataBase.DATABASE_NAME
         )
@@ -38,6 +32,13 @@ object DataModule {
 
     @Singleton
     @Provides
-    fun provideRepository(dataBase: HistoryDataBase):Repository = Repository(dataBase)
+    fun provideHistoryDataBaseDao(dataBase: HistoryDataBase): HistoryDao {
+        return dataBase.getDao()
+    }
 
+    @Singleton
+    @Provides
+    fun provideRepository(dao: HistoryDao): RepositoryContract {
+        return Repository(dao)
+    }
 }

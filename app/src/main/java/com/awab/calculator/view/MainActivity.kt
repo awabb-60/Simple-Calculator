@@ -6,10 +6,12 @@ import android.os.Bundle
 import android.text.InputType
 import android.view.View
 import android.widget.EditText
+import android.widget.TableRow
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.children
 import androidx.lifecycle.ViewModelProvider
 import com.awab.calculator.R
 import com.awab.calculator.databinding.ActivityMainBinding
@@ -26,11 +28,11 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
     private lateinit var tvAnswer: TextView
 
     private val settingsActivityLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result->
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             // updating the view if the settings has changed
-            if(result.resultCode == Activity.RESULT_OK)
+            if (result.resultCode == Activity.RESULT_OK)
                 recreate()
-    }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +41,9 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
         setCurrentSettings()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
+
+        adjustViewsBaseOnScreenSize()
+
         setContentView(binding.root)
 
         etType = binding.etType
@@ -52,9 +57,6 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
         binding.tvHistory.setOnClickListener {
             openCloseHistoryFragment()
         }
-
-        etType.setText(calculatorViewModel.equationText.value)
-        tvAnswer.text = calculatorViewModel.answerText.value
 
         // to put the answer text in the equation text
         tvAnswer.setOnClickListener {
@@ -73,11 +75,11 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
             binding.tvAnswer.text = answer
         })
 
-        // to remove the input method from the screen at all time
-        etType.inputType = InputType.TYPE_NULL
-        etType.setRawInputType(InputType.TYPE_CLASS_TEXT)
-        etType.setTextIsSelectable(true)
+        removeInputMethod()
 
+        setClickListenersOnTheButtons()
+
+        // set click listener to allow thw user to change the cursor position
         etType.setOnClickListener {
             // no need to refactor at the start
             if (etType.selectionStart > 0)
@@ -89,13 +91,9 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
         }
     }
 
-    private fun setCurrentSettings() {
-        if (calculatorViewModel.getSavedDarkModeState(this))
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-        else
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-
-        setTheme(calculatorViewModel.getSavedTheme(this).resId)
+    private fun adjustViewsBaseOnScreenSize() {
+        val screenHeight = windowManager.defaultDisplay.height
+        binding.typeLayout.layoutParams.height = (screenHeight * 0.3).toInt()
     }
 
     override fun onBackPressed() {
@@ -122,6 +120,37 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
         // puling back the views
         etType.animate().setDuration(300).alpha(1F).translationY(0F).start()
         tvAnswer.animate().setDuration(300).translationY(0F).start()
+    }
+
+    private fun setCurrentSettings() {
+        if (calculatorViewModel.getSavedDarkModeState(this))
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        else
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+
+        setTheme(calculatorViewModel.getSavedTheme(this).resId)
+    }
+
+    private fun removeInputMethod() {
+        // to remove the input method from the screen at all time
+        etType.inputType = InputType.TYPE_NULL
+        etType.setRawInputType(InputType.TYPE_CLASS_TEXT)
+        etType.setTextIsSelectable(true)
+    }
+
+    private fun setClickListenersOnTheButtons() {
+        // lopping throe the rows
+        binding.keyPadLayout.children.forEach { tableRow->
+            // double check that its a TableRow
+            if (tableRow is TableRow) {
+                // set a click listener for every child (button)
+                tableRow.children.forEach { button->
+                    button.setOnClickListener {
+                        buttonClicked(it)
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -170,7 +199,7 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
     /**
      * all the keyPad buttons will trigger this function
      */
-    fun buttonClicked(v: View) {
+    private fun buttonClicked(v: View) {
         when (v.id) {
             R.id.clearAll -> clearAll()
             R.id.equals -> equals()

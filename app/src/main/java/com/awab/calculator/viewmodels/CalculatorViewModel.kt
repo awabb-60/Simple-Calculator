@@ -6,15 +6,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
 import androidx.lifecycle.ViewModel
 import com.awab.calculator.R
-import com.awab.calculator.data.data_models.HistoryItem
-import com.awab.calculator.data.Repository
+import com.awab.calculator.data.local.room.entitys.HistoryItem
 import com.awab.calculator.data.data_models.ThemeModel
+import com.awab.calculator.data.repository.RepositoryContract
 import com.awab.calculator.utils.*
 import com.awab.calculator.utils.calculator_utils.Calculator
 import com.awab.calculator.utils.calculator_utils.Lexer
 import com.awab.calculator.utils.calculator_utils.TokenType
 import com.awab.calculator.view.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,7 +24,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CalculatorViewModel
-    @Inject constructor(private val repository:Repository, private val calculator: Calculator) : ViewModel() {
+    @Inject constructor(private val repository: RepositoryContract, private val calculator: Calculator) : ViewModel() {
 
     //  the mutable values for the livedata... any edit must happen on this variables
     private val _equationText: MutableLiveData<String> = MutableLiveData<String>("")
@@ -162,7 +163,7 @@ class CalculatorViewModel
      * @param item the that will get saved
      */
     private fun insertHistory(item: HistoryItem) {
-        viewModelScope.launch(Dispatchers.IO) {
+        CoroutineScope(Dispatchers.IO).launch {
             repository.insert(item)
         }
     }
@@ -171,8 +172,8 @@ class CalculatorViewModel
      * clearing the history items database
      */
     fun clearHistoryItems() {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.clearHistoryItems()
+        CoroutineScope(Dispatchers.IO).launch {
+            repository.clearAll()
         }
     }
 

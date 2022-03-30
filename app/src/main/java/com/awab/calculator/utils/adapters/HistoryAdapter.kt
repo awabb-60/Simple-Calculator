@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.awab.calculator.R
-import com.awab.calculator.data.data_models.HistoryItem
+import com.awab.calculator.data.local.room.entitys.HistoryItem
 
 class HistoryAdapter: ListAdapter<HistoryItem, HistoryAdapter.ViewHolder>(DiffCallBack()) {
     private lateinit var listener: HistoryClickListener

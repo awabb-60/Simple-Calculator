@@ -1,14 +1,15 @@
-package com.awab.calculator.data
+package com.awab.calculator.data.local.room.dao
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.awab.calculator.data.data_models.HistoryItem
+import com.awab.calculator.data.local.room.entitys.HistoryItem
 
 @Dao
-interface HistoryItemsDao {
-    @Insert
+interface HistoryDao {
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(item: HistoryItem)
 
     @Query("SELECT * FROM history_items")

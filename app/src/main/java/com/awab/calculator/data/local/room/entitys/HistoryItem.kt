@@ -1,4 +1,4 @@
-package com.awab.calculator.data.data_models
+package com.awab.calculator.data.local.room.entitys
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
