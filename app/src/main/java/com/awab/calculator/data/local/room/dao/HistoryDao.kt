@@ -12,9 +12,10 @@ interface HistoryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(item: HistoryItem)
 
+    @Query("DELETE FROM history_items")
+    suspend fun clearHistoryItems()
+
     @Query("SELECT * FROM history_items")
     fun getAll(): LiveData<List<HistoryItem>>
 
-    @Query("DELETE FROM history_items")
-    suspend fun clearHistoryItems()
 }
