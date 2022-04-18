@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import com.awab.calculator.data.local.room.database.HistoryDataBase
 import com.awab.calculator.data.local.room.dao.HistoryDao
+import com.awab.calculator.data.repository.CalculatorRepository
 import com.awab.calculator.data.repository.Repository
-import com.awab.calculator.data.repository.RepositoryContract
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -38,7 +38,7 @@ object DataModule {
 
     @Singleton
     @Provides
-    fun provideRepository(dao: HistoryDao): RepositoryContract {
-        return Repository(dao)
+    fun provideRepository(dao: HistoryDao): Repository {
+        return CalculatorRepository(dao)
     }
 }

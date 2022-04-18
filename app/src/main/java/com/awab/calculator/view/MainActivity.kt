@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TableRow
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
@@ -68,11 +69,15 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
             etType.editableText.clear()
             etType.editableText.append(text)
         })
+        calculatorViewModel.answerText.observe(this, { answer ->
+            binding.tvAnswer.text = answer
+        })
         calculatorViewModel.cursorPosition.observe(this, { pos ->
             etType.setSelection(pos)
         })
-        calculatorViewModel.answerText.observe(this, { answer ->
-            binding.tvAnswer.text = answer
+        calculatorViewModel.errorMessage.observe(this, { message ->
+            if(message.isNotEmpty())
+                Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
         })
 
         removeInputMethod()
@@ -211,7 +216,7 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
      * this will start making the calculations and do some animations
      */
     private fun equals() {
-        if (calculatorViewModel.makeCalculations(this)) {
+        if (calculatorViewModel.makeCalculations()) {
             etType.animate().setDuration(200).alpha(0F).start()
             etType.postDelayed({ etType.alpha = 1F;calculatorViewModel.updateEquation("") }, 300)
         }

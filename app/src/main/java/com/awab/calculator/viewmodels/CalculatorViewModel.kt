@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.awab.calculator.R
 import com.awab.calculator.data.local.room.entitys.HistoryItem
 import com.awab.calculator.data.data_models.ThemeModel
-import com.awab.calculator.data.repository.RepositoryContract
+import com.awab.calculator.data.repository.Repository
 import com.awab.calculator.utils.*
 import com.awab.calculator.utils.calculator_utils.Calculator
 import com.awab.calculator.utils.calculator_utils.Lexer
@@ -24,12 +24,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CalculatorViewModel
-    @Inject constructor(private val repository: RepositoryContract, private val calculator: Calculator) : ViewModel() {
+    @Inject constructor(private val repository: Repository, private val calculator: Calculator) : ViewModel() {
 
     //  the mutable values for the livedata... any edit must happen on this variables
     private val _equationText: MutableLiveData<String> = MutableLiveData<String>("")
     private val _answerText: MutableLiveData<String> = MutableLiveData<String>("")
     private val _cursorPosition: MutableLiveData<Int> = MutableLiveData<Int>(0)
+    private val _errorMessage: MutableLiveData<String> = MutableLiveData<String>("")
 
     val equationText: LiveData<String>
         get() = _equationText
@@ -39,6 +40,9 @@ class CalculatorViewModel
 
     val cursorPosition: LiveData<Int>
         get() = _cursorPosition
+
+    val errorMessage: LiveData<String>
+        get() = _errorMessage
 
     /**
      * the cursor positions when the user has clicked a button
@@ -53,6 +57,8 @@ class CalculatorViewModel
 
     /**
      * this function will change the value of the equation text
+     * @param beforeText the text before the cursor
+     * @param afterText the text after the cursor
      */
     fun updateEquation(beforeText: String, afterText: String = "") {
         // the cursor will be after the new text always
@@ -81,10 +87,9 @@ class CalculatorViewModel
      * @param context the context to show the toast message
      * @return true if the calculation was successful, false if any error occur
      */
-    fun makeCalculations(context: Context): Boolean {
+    fun makeCalculations(): Boolean {
         //  answer will come as a number if every thing was good
         //  and it will come as the error message when error occur
-
         val answer = calculator.solve(closeParenthesis(_equationText.value!!))
 
         return try {
@@ -103,10 +108,12 @@ class CalculatorViewModel
 
             // when the answer is too big it will come as Infinity
             // showing a better message
-            if (answer == Double.POSITIVE_INFINITY.toString()){
-                Toast.makeText(context, NUMBER_TOO_BIG_ERROR, Toast.LENGTH_SHORT).show()
+            _errorMessage.value = if (answer == Double.POSITIVE_INFINITY.toString()){
+                 NUMBER_TOO_BIG_ERROR
             }else // the normal error message
-                Toast.makeText(context, answer, Toast.LENGTH_SHORT).show()
+                answer
+
+            _errorMessage.postValue("")
             false
         }
     }

@@ -1,6 +1,5 @@
 package com.awab.calculator.data.local.room.dao
 
-import android.util.Log
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
@@ -52,7 +51,6 @@ class HistoryDaoTest:TestCase() {
 
         val result = listOfItem.getOrAwaitValueTest()
 
-        Log.d("TAG", "insertHistoryItem: $result")
         assert(result.contains(item))
     }
 
@@ -73,3 +71,20 @@ class HistoryDaoTest:TestCase() {
         assert(result)
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
