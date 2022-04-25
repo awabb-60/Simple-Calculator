@@ -10,11 +10,13 @@
     <LinearLayout
         android:id="@+id/type_layout"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
+        android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/toolsLayout"
+        >
 
         <EditText
             android:id="@+id/etType"
@@ -28,10 +30,11 @@
 
         <TextView
             android:id="@+id/tvAnswer"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="end"
             android:layout_weight="0.2"
-            android:gravity="end|center_vertical"
+            android:gravity="center_vertical"
             android:maxLines="1"
             android:textColor="?attr/theme_color"
             android:textSize="20sp"
@@ -42,10 +45,12 @@
         android:id="@+id/toolsLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/type_layout"
+        android:weightSum="5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:weightSum="5">
+        app:layout_constraintBottom_toTopOf="@id/keyPad_guideline"
+        >
+
 
         <TextView
             android:id="@+id/tvHistory"
@@ -58,14 +63,21 @@
 
         <ImageView
             android:id="@+id/openSettings"
-            android:background="?attr/selectableItemBackground"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_settings"
             android:layout_weight="1"
-            android:contentDescription="@string/open_settings" />
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="@string/open_settings"
+            android:src="@drawable/ic_settings" />
 
     </LinearLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/keyPad_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.4" />
 
     <TableLayout
         android:id="@+id/keyPad_layout"
@@ -75,7 +87,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolsLayout">
+        app:layout_constraintTop_toBottomOf="@id/keyPad_guideline">
 
         <TableRow style="@style/tableRow">
 
@@ -248,5 +260,7 @@
         app:layout_constraintEnd_toEndOf="@id/keyPad_layout"
         app:layout_constraintStart_toStartOf="@id/keyPad_layout"
         app:layout_constraintTop_toTopOf="@id/keyPad_layout" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,7 +1,6 @@
 package com.awab.calculator.viewmodels
 
 import android.content.Context
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
 import androidx.lifecycle.ViewModel
@@ -84,7 +83,6 @@ class CalculatorViewModel
      * it will take the equation text and will try to solve it
      * if the equation is solvable, the answer text will get updated, when any
      * error occur... it will show a toast with the message of the error.
-     * @param context the context to show the toast message
      * @return true if the calculation was successful, false if any error occur
      */
     fun makeCalculations(): Boolean {

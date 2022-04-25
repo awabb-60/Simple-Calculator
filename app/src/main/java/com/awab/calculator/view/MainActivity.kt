@@ -42,8 +42,8 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
         setCurrentSettings()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-
-        adjustViewsBaseOnScreenSize()
+ 
+//        adjustViewsBaseOnScreenSize()
 
         setContentView(binding.root)
 
