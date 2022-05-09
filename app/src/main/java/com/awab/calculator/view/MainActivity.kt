@@ -2,8 +2,11 @@ package com.awab.calculator.view
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.InputType
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.widget.EditText
 import android.widget.TableRow
@@ -42,8 +45,6 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
         setCurrentSettings()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
- 
-//        adjustViewsBaseOnScreenSize()
 
         setContentView(binding.root)
 
@@ -65,20 +66,19 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
                 typeAnswer()
         }
         //  putting the observers to update the views
-        calculatorViewModel.equationText.observe(this, { text ->
+        calculatorViewModel.equationText.observe(this) { text ->
             etType.editableText.clear()
             etType.editableText.append(text)
-        })
-        calculatorViewModel.answerText.observe(this, { answer ->
-            binding.tvAnswer.text = answer
-        })
-        calculatorViewModel.cursorPosition.observe(this, { pos ->
+        }
+        calculatorViewModel.answerText.observe(this) { answer ->
+            binding.tvAnswer.text = highlightDot(answer)
+        }
+        calculatorViewModel.cursorPosition.observe(this) { pos ->
             etType.setSelection(pos)
-        })
-        calculatorViewModel.errorMessage.observe(this, { message ->
-            if(message.isNotEmpty())
-                Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
-        })
+        }
+        calculatorViewModel.errorMessage.observe(this) { message ->
+            message?.let { Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show() }
+        }
 
         removeInputMethod()
 
@@ -94,11 +94,6 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
         binding.openSettings.setOnClickListener {
             settingsActivityLauncher.launch(Intent(this@MainActivity, SettingsActivity::class.java))
         }
-    }
-
-    private fun adjustViewsBaseOnScreenSize() {
-        val screenHeight = windowManager.defaultDisplay.height
-        binding.typeLayout.layoutParams.height = (screenHeight * 0.3).toInt()
     }
 
     override fun onBackPressed() {
@@ -145,11 +140,11 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
 
     private fun setClickListenersOnTheButtons() {
         // lopping throe the rows
-        binding.keyPadLayout.children.forEach { tableRow->
+        binding.keyPadLayout.children.forEach { tableRow ->
             // double check that its a TableRow
             if (tableRow is TableRow) {
                 // set a click listener for every child (button)
-                tableRow.children.forEach { button->
+                tableRow.children.forEach { button ->
                     button.setOnClickListener {
                         buttonClicked(it)
                     }
@@ -230,5 +225,17 @@ class MainActivity : AppCompatActivity(), HistoryFragment.FragmentListener {
         etType.animate().setDuration(200).alpha(0F).start()
         tvAnswer.animate().setDuration(200).alpha(0F).start()
         etType.postDelayed({ calculatorViewModel.clearAll();etType.alpha = 1F;tvAnswer.alpha = 1F }, 300)
+    }
+
+    private fun highlightDot(answer: String): SpannableString {
+        val ss = SpannableString(answer)
+
+        if (answer.contains('.')) {
+            val dotIndex = answer.indexOf('.')
+            val color = ForegroundColorSpan(Color.BLACK)
+            ss.setSpan(color, dotIndex, dotIndex + 1,0)
+        }
+
+        return ss
     }
 }

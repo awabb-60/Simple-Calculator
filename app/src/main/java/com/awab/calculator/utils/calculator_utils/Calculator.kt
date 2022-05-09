@@ -104,8 +104,9 @@ constructor(){
      * it takes the equation as a string and return the value of it
      * @param text the equation text
      * @return the value of the equation text or an error message
+     * @throws  Exception when any mathematical errors occur or the equation is unsolvable,
      */
-    fun solve(text: String): String {
+    fun solve(text: String): Double {
         //  making the tokens
         val tokens = Lexer().generateTokens(text)
         return solve(tokens)
@@ -116,19 +117,20 @@ constructor(){
      * it takes tokens and get the value of these tokens
      * @param tokens the equation text
      * @return the value of the equation tokens or an error message
+     * @throws  Exception when any mathematical errors occur or the equation is unsolvable,
      */
-    fun solve(tokens: List<Token>): String {
+    fun solve(tokens: List<Token>): Double {
         //  trying to solve the equation
-        return try {
+        try {
             //  if the tokens are not solvable and error will occur
             isSolvable(tokens)
             //  making the tree
             val tree = Parser().generateTree(tokens as ArrayList<Token>)
             //  returning the value of the tree
-            tree.getValue().toString()
+            return tree.getValue()
         } catch (e: Exception) {
             //  returning the message of the error that occur while solving the equation
-            e.message ?: SYNTAX_ERROR
+            throw Exception(e.message ?: SYNTAX_ERROR)
         }
     }
 

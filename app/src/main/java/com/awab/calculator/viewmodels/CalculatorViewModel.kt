@@ -2,11 +2,12 @@ package com.awab.calculator.viewmodels
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.awab.calculator.R
-import com.awab.calculator.data.local.room.entitys.HistoryItem
 import com.awab.calculator.data.data_models.ThemeModel
+import com.awab.calculator.data.local.room.entitys.HistoryItem
 import com.awab.calculator.data.repository.Repository
 import com.awab.calculator.utils.*
 import com.awab.calculator.utils.calculator_utils.Calculator
@@ -17,19 +18,23 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
+import java.math.RoundingMode
+import java.text.NumberFormat
+import java.util.*
 import javax.inject.Inject
 
 // TODO: 1/1/2022 order of operations
 
 @HiltViewModel
 class CalculatorViewModel
-    @Inject constructor(private val repository: Repository, private val calculator: Calculator) : ViewModel() {
+@Inject constructor(private val repository: Repository, private val calculator: Calculator) : ViewModel() {
 
     //  the mutable values for the livedata... any edit must happen on this variables
     private val _equationText: MutableLiveData<String> = MutableLiveData<String>("")
     private val _answerText: MutableLiveData<String> = MutableLiveData<String>("")
     private val _cursorPosition: MutableLiveData<Int> = MutableLiveData<Int>(0)
-    private val _errorMessage: MutableLiveData<String> = MutableLiveData<String>("")
+    private val _errorMessage: MutableLiveData<String?> = MutableLiveData<String?>(null)
 
     val equationText: LiveData<String>
         get() = _equationText
@@ -40,13 +45,13 @@ class CalculatorViewModel
     val cursorPosition: LiveData<Int>
         get() = _cursorPosition
 
-    val errorMessage: LiveData<String>
+    val errorMessage: LiveData<String?>
         get() = _errorMessage
 
     /**
      * the cursor positions when the user has clicked a button
      * -> it only used in the type function
-     * ->I make it global so i don't have to pass it to every type() call.
+     * -> I make it global so i don't have to pass it to every type() call.
      */
     private var currentCursorPos = 0
 
@@ -88,32 +93,55 @@ class CalculatorViewModel
     fun makeCalculations(): Boolean {
         //  answer will come as a number if every thing was good
         //  and it will come as the error message when error occur
-        val answer = calculator.solve(closeParenthesis(_equationText.value!!))
 
         return try {
             /* checking if the answer is a number or an error message buy calling toBigDecimal()
              if the answer is an error message it will catch the error and toast the message
               */
-            val answerString = answer.toBigDecimal().toString()
+            val answer = calculator.solve(closeParenthesis(_equationText.value!!))
 
+            val answerString = adjustAnswer(answer.toBigDecimal())
             _answerText.value = answerString
             //  saving the equation
-            insertHistory(HistoryItem(equation = _equationText.value!!, answer = answer))
+            insertHistory(HistoryItem(equation = _equationText.value!!, answer = _answerText.value!!))
             true
         } catch (e: Exception) {
             //  an error occurred... showing a toast
+
+            val errorMessage = e.message
+
             _answerText.value = ""
 
             // when the answer is too big it will come as Infinity
             // showing a better message
-            _errorMessage.value = if (answer == Double.POSITIVE_INFINITY.toString()){
-                 NUMBER_TOO_BIG_ERROR
-            }else // the normal error message
-                answer
+            _errorMessage.value = if (errorMessage == Double.POSITIVE_INFINITY.toString()) {
+                NUMBER_TOO_BIG_ERROR
+            } else // the normal error message
+                errorMessage
 
-            _errorMessage.postValue("")
+            _errorMessage.postValue(null)
             false
         }
+    }
+
+    private fun showAnswerPreview() {
+        _answerText.value = try {
+            val answer = calculator.solve(_equationText.value!!)
+            adjustAnswer(answer.toBigDecimal())
+        } catch (e: Exception) {
+            ""
+        }
+    }
+
+    /**
+     * this function will take a number and beautify it looks, make it more readable and
+     * displayed in a nice way
+     * @param answer the number that will get beautify
+     * @return beautiful number as String
+     */
+    private fun adjustAnswer(answer: BigDecimal): String {
+        val nf = NumberFormat.getInstance(Locale.US)
+        return nf.format(answer)
     }
 
     /**
@@ -187,9 +215,9 @@ class CalculatorViewModel
      */
     fun buttonClicked(id: Int, cursorStartPos: Int, cursorEndPos: Int) {
 //        the selection has a range
-        if (cursorEndPos != cursorStartPos){
+        if (cursorEndPos != cursorStartPos) {
             _equationText.value = _equationText.value?.removeRange(cursorStartPos, cursorEndPos)
-            if(id == R.id.backSpace)
+            if (id == R.id.backSpace)
                 return
         }
         // so all the type functions calls us it
@@ -284,15 +312,6 @@ class CalculatorViewModel
         showAnswerPreview()
     }
 
-    private fun showAnswerPreview() {
-        _answerText.value = try {
-            val preview = calculator.solve(_equationText.value!!)
-            preview.toBigDecimal().toString()
-        }catch (e:Exception){
-            ""
-        }
-    }
-
     /**
      * this will try to add the char to the equation text
      * @param char the char tha will get added
@@ -349,6 +368,7 @@ class CalculatorViewModel
         else
             type('(')
     }
+
     /**
      * open parenthesis with a negative at the start, (-
      */
@@ -361,7 +381,7 @@ class CalculatorViewModel
      * type the symbols that ends with an left parentheses e.g Sin(
      * @param text the text before the left parentheses
      */
-    private fun typeEndWithParenthesis(text: String){
+    private fun typeEndWithParenthesis(text: String) {
         text.forEach {
             type(it)
         }
@@ -405,13 +425,13 @@ class CalculatorViewModel
         var currentToken = lexer.generateToken(_equationText.value?.get(newPosition)!!)
 
         // while the cursor in a wrong position
-        while (currentToken == null || currentToken.tokenType in cursorCantBeAfter){
+        while (currentToken == null || currentToken.tokenType in cursorCantBeAfter) {
             newPosition++
             currentToken = lexer.generateToken(_equationText.value?.get(newPosition)!!)
         }
         // because the position of the cursor is the position of the char before it
         newPosition++
-       _cursorPosition.value = newPosition
+        _cursorPosition.value = newPosition
     }
 
 

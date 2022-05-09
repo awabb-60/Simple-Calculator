@@ -37,8 +37,10 @@
             android:gravity="center_vertical"
             android:maxLines="1"
             android:textColor="?attr/theme_color"
-            android:textSize="20sp"
-            tools:hint="Answer" />
+            android:textSize="25sp"
+            tools:hint="Answer"
+            android:layout_marginRight="10dp"
+            android:layout_marginEnd="10dp" />
     </LinearLayout>
 
     <LinearLayout
@@ -50,7 +52,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/keyPad_guideline"
         >
-
 
         <TextView
             android:id="@+id/tvHistory"
