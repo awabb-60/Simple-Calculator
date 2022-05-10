@@ -18,7 +18,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.NumberFormat
 import java.util.*
@@ -100,7 +99,7 @@ class CalculatorViewModel
               */
             val answer = calculator.solve(closeParenthesis(_equationText.value!!))
 
-            val answerString = adjustAnswer(answer.toBigDecimal())
+            val answerString = adjustAnswer(answer)
             _answerText.value = answerString
             //  saving the equation
             insertHistory(HistoryItem(equation = _equationText.value!!, answer = _answerText.value!!))
@@ -127,7 +126,7 @@ class CalculatorViewModel
     private fun showAnswerPreview() {
         _answerText.value = try {
             val answer = calculator.solve(_equationText.value!!)
-            adjustAnswer(answer.toBigDecimal())
+            adjustAnswer(answer)
         } catch (e: Exception) {
             ""
         }
@@ -139,8 +138,9 @@ class CalculatorViewModel
      * @param answer the number that will get beautify
      * @return beautiful number as String
      */
-    private fun adjustAnswer(answer: BigDecimal): String {
+    private fun adjustAnswer(answer: Double): String {
         val nf = NumberFormat.getInstance(Locale.US)
+        nf.maximumFractionDigits = 10
         return nf.format(answer)
     }
 
